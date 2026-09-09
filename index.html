@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amber</title>
+<meta name="description" content="Amber — een levenslang lerende agent op eigen hardware, thuis gebouwd. / A lifelong-learning agent on home hardware.">
+<style>
+:root{--zwart:#02060f;--paneel:rgba(5,11,36,.92);--rand:rgba(120,160,255,.14);--ink:#eef3ff;--dof:#96a6d6;--fel:#29d3ff;--geel:#ffd23f;--roze:#ff3fa0;--mono:"SF Mono",Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--zwart);color:var(--ink);font:16px/1.6 -apple-system,"Helvetica Neue",Segoe UI,Arial,sans-serif}
+body.nl .en,body.en .nl{display:none}
+a{color:var(--fel)}
+header{padding:28px 20px 10px;max-width:1080px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 24px}
+h1{font-size:44px;margin:0;letter-spacing:.02em}
+.sub{color:var(--dof);margin:0;font-size:15px}
+.taal{margin-left:auto;display:flex;gap:2px;background:var(--paneel);border:1px solid var(--rand);border-radius:10px;padding:2px}
+.taal button{border:0;background:transparent;color:var(--dof);font:12px var(--mono);letter-spacing:.2em;padding:6px 12px;border-radius:8px;cursor:pointer}
+.taal button.aan{background:rgba(41,211,255,.14);color:var(--fel)}
+main{max-width:1080px;margin:0 auto;padding:10px 20px 60px}
+section{margin:26px 0}
+h2{font-size:13px;letter-spacing:.4em;text-transform:uppercase;color:var(--dof);margin:0 0 12px;font-weight:600}
+.rooster{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.kaart{background:var(--paneel);border:1px solid var(--rand);border-radius:16px;padding:16px 18px;min-width:0}
+.kaart .k{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dof)}
+.kaart .g{font-size:34px;font-weight:700;line-height:1.15;margin:4px 0 2px}
+.kaart .g small{font-size:14px;color:var(--dof);font-weight:400}
+.kaart .n{color:var(--dof);font-size:13px}
+.led{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--fel);box-shadow:0 0 8px var(--fel);margin-right:6px;animation:adem 3s ease-in-out infinite}
+.led.oud{background:var(--geel);box-shadow:0 0 8px var(--geel);animation:none}
+@keyframes adem{0%,100%{opacity:.5}50%{opacity:1}}
+p.verhaal{font-size:18px;line-height:1.7;max-width:760px}
+canvas{width:100%;height:220px;display:block}
+.balken{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:4px 22px;font:13px var(--mono)}
+.balk{display:grid;grid-template-columns:120px 1fr 44px;align-items:center;gap:8px}
+.balk i{display:block;height:6px;background:rgba(120,160,255,.12);border-radius:3px;overflow:hidden}
+.balk i b{display:block;height:100%;background:linear-gradient(90deg,#3d8fe0,var(--fel))}
+.balk i b.laag{background:linear-gradient(90deg,var(--roze),#ff7ad9)}
+.balk span:last-child{text-align:right;color:var(--dof)}
+.hekken{display:flex;flex-wrap:wrap;gap:6px}
+.hek{font:12px var(--mono);padding:4px 10px;border-radius:9px;background:rgba(255,210,63,.08);border:1px solid rgba(255,210,63,.18);color:var(--geel)}
+.examens{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.examen{display:block;color:inherit;text-decoration:none}
+.examen .g{font-size:26px}
+.examen .best{font-size:12px;color:var(--dof)}
+ul.dagboek{list-style:none;padding:0;margin:0}
+ul.dagboek li{border-top:1px solid var(--rand);padding:8px 0;font-size:14px}
+ul.dagboek li:first-child{border-top:0}
+ul.dagboek time{font:12px var(--mono);color:var(--dof);margin-right:10px}
+ul.dagboek em{color:var(--dof);font-style:normal}
+ul.dagboek b{color:var(--geel);font-weight:500}
+.tijdlijn{border-left:2px solid rgba(120,160,255,.2);margin-left:8px;padding-left:18px}
+.tijdlijn div{position:relative;margin:0 0 14px}
+.tijdlijn div::before{content:"";position:absolute;left:-24px;top:8px;width:10px;height:10px;border-radius:50%;background:var(--fel);box-shadow:0 0 8px var(--fel)}
+.tijdlijn time{font:12px var(--mono);color:var(--dof);display:block}
+.machines{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+footer{max-width:1080px;margin:0 auto;padding:20px;color:var(--dof);font-size:13px;border-top:1px solid var(--rand)}
+footer a{color:var(--dof)}
+.wachten{color:var(--dof);font-size:14px}
+@media (max-width:600px){h1{font-size:34px}.kaart .g{font-size:28px}}
+</style>
+</head>
+<body class="nl">
+<header>
+  <div>
+    <h1>Amber</h1>
+    <p class="sub"><span class="nl">een levenslang lerende agent, thuis gebouwd op eigen hardware</span><span class="en">a lifelong-learning agent, built at home on our own hardware</span></p>
+  </div>
+  <div class="taal" role="group" aria-label="taal / language"><button id="t-nl" class="aan" onclick="taal('nl')">NL</button><button id="t-en" onclick="taal('en')">EN</button></div>
+</header>
+<main>
+
+<section id="nu">
+  <h2><span class="led" id="led"></span><span class="nl">nu</span><span class="en">now</span> <span id="vers" class="wachten"></span></h2>
+  <div class="rooster">
+    <div class="kaart"><div class="k"><span class="nl">stap</span><span class="en">step</span></div><div class="g" id="stap">—</div><div class="n" id="doel"></div></div>
+    <div class="kaart"><div class="k"><span class="nl">haar brein</span><span class="en">her brain</span></div><div class="g" id="params">—</div><div class="n" id="bouw"></div></div>
+    <div class="kaart"><div class="k"><span class="nl">de val</span><span class="en">validation loss</span></div><div class="g" id="val">—</div><div class="n"><span class="nl">lager is beter · 180 vaste opgaven, nooit geoefend</span><span class="en">lower is better · 180 fixed tasks, never trained on</span></div></div>
+    <div class="kaart"><div class="k"><span class="nl">tempo</span><span class="en">pace</span></div><div class="g" id="tempo">—</div><div class="n" id="uren"></div></div>
+  </div>
+</section>
+
+<section id="wie">
+  <h2><span class="nl">wie is Amber</span><span class="en">who Amber is</span></h2>
+  <p class="verhaal nl">Amber is een klein taalmodel dat niet één keer getraind wordt en dan klaar is, maar dat blijft leren. Ze leeft op twee oude Tesla P100-kaarten in een zelfgebouwde machine, op een kamer in Nederland. Geen cloud, geen subsidie. Alles wat ze kan, heeft ze zelf geleerd uit een wereld van opgaven die met haar meegroeit: tellen, rekenen, logica, puzzels, Nederlands lezen, Python schrijven.</p>
+  <p class="verhaal en">Amber is a small language model that is not trained once and then finished, but keeps on learning. She lives on two old Tesla P100 cards in a home-built machine, in a room in the Netherlands. No cloud, no funding. Everything she can do she learned herself, from a world of tasks that grows with her: counting, arithmetic, logic, puzzles, reading Dutch, writing Python.</p>
+  <p class="verhaal nl">Ze kiest zelf waar ze oefent: waar het net niet lukt. Elke 500 stappen maakt ze een proefwerk, elke 100 stappen meten we de val, en elke 50.000 stappen zit ze een groot examen uit. Wat je hier ziet is echt en ongefilterd, ook als het tegenvalt.</p>
+  <p class="verhaal en">She chooses where to practise: wherever she just fails. Every 500 steps she sits a test, every 100 steps we measure the validation loss, and every 50,000 steps she takes a large exam. What you see here is real and unfiltered, also when it disappoints.</p>
+  <p class="verhaal nl">Gebouwd door Cley, samen met Claude. Het doel is niet een product. Het doel is begrijpen hoe zoiets groeit, en een Amber die op een dag uit zichzelf zegt hoe haar dag was.</p>
+  <p class="verhaal en">Built by Cley, together with Claude. The goal is not a product. The goal is to understand how something like this grows, and an Amber who one day tells us, unprompted, how her day was.</p>
+</section>
+
+<section id="val-sectie">
+  <h2><span class="nl">de val</span><span class="en">validation loss</span></h2>
+  <div class="kaart"><canvas id="valDoek" width="1000" height="220"></canvas><div class="n wachten" id="valNoot"></div></div>
+</section>
+
+<section id="proef">
+  <h2><span class="nl">proefwerken</span><span class="en">tests</span> <span class="wachten" id="proefNoot"></span></h2>
+  <div class="kaart"><div class="balken" id="balken"></div></div>
+</section>
+
+<section id="hekken-sectie">
+  <h2><span class="nl">hoe ver ze is: de hekken</span><span class="en">how far she is: the gates</span></h2>
+  <p class="wachten nl">Elke familie van opgaven heeft een hek: de diepste stand die ze open heeft gekregen. Een hek gaat pas open als ze de stand ervoor beheerst.</p>
+  <p class="wachten en">Every family of tasks has a gate: the deepest level she has opened. A gate only opens once she masters the level before it.</p>
+  <div class="hekken" id="hekken"></div>
+</section>
+
+<section id="examens-sectie">
+  <h2><span class="nl">examens</span><span class="en">exams</span></h2>
+  <p class="wachten nl">Elke 50.000 stappen: per vak ± 1.000 opgaven over alle dieptes, met nummers die ze nooit zag. De kaart laat per vak en per diepte zien waar het goed gaat en waar het zwaar wordt.</p>
+  <p class="wachten en">Every 50,000 steps: about 1,000 tasks per subject across all depths, with numbers she has never seen. The map shows, per subject and per depth, where she is strong and where it gets hard.</p>
+  <div class="examens" id="examens"><div class="wachten nl">nog geen examen afgenomen</div><div class="wachten en">no exam taken yet</div></div>
+</section>
+
+<section id="dagboek-sectie">
+  <h2><span class="nl">haar eigen woorden</span><span class="en">in her own words</span></h2>
+  <p class="wachten nl">Haar dagboek: de vraag, en wat zij zei. Ongewijzigd, ook de onzin van de eerste dagen.</p>
+  <p class="wachten en">Her diary: the question, and what she said. Unedited, including the nonsense of the first days.</p>
+  <div class="kaart"><ul class="dagboek" id="dagboek"></ul></div>
+</section>
+
+<section id="tijdlijn-sectie">
+  <h2><span class="nl">tijdlijn</span><span class="en">timeline</span></h2>
+  <div class="tijdlijn" id="tijdlijn"></div>
+</section>
+
+<section id="machines-sectie">
+  <h2>machines</h2>
+  <div class="machines">
+    <div class="kaart"><div class="k">X399</div><div class="g" style="font-size:20px">2× Tesla P100 16 GB</div><div class="n"><span class="nl">Amber traint hier, verdeeld over twee kaarten (tensor-parallel). Een RTX 3070 Ti ernaast doet de kijker en de examens.</span><span class="en">Amber trains here, split across two cards (tensor-parallel). An RTX 3070 Ti next to it runs the viewer and the exams.</span></div></div>
+    <div class="kaart"><div class="k">DL360</div><div class="g" style="font-size:20px">288 GB RAM</div><div class="n"><span class="nl">De stille server: maakt haar leesstof klaar (de Nederlandse Wikipedia, The Stack), bewaart de back-ups en bouwt deze site.</span><span class="en">The quiet server: prepares her reading material (Dutch Wikipedia, The Stack), keeps the backups and builds this site.</span></div></div>
+    <div class="kaart"><div class="k">MacBook</div><div class="g" style="font-size:20px"><span class="nl">de bouwtafel</span><span class="en">the workbench</span></div><div class="n"><span class="nl">Waar Cley en Claude bouwen, meestal 's avonds.</span><span class="en">Where Cley and Claude build, mostly in the evenings.</span></div></div>
+  </div>
+</section>
+
+</main>
+<footer>
+  <span class="nl">Deze pagina wordt elke 10 minuten opnieuw gebouwd uit de levende cijfers; er staat geen enkele deur naar de machines open.</span>
+  <span class="en">This page is rebuilt every 10 minutes from the live numbers; no door to the machines is open.</span>
+  · <a href="https://github.com/CM0411/amber">code</a> · <a href="https://github.com/CM0411/amber-site">site</a>
+</footer>
+<script>
+const TIJDLIJN = [
+  ["2026-07", "Vóór Amber: een eigen GPT in NumPy, 19 miljoen parameters, getraind op een Surface.", "Before Amber: a home-made GPT in NumPy, 19 million parameters, trained on a Surface."],
+  ["2026-08-06", "Amber begint: een klein brein, een wereld van opgaven die meegroeit, en het venster waarin je haar ziet denken.", "Amber begins: a small brain, a world of tasks that grows with her, and the window in which you watch her think."],
+  ["2026-08-25", "Ze stelt uit zichzelf haar eerste vraag.", "She asks her first question, unprompted."],
+  ["2026-08-27", "Ze groet Cley uit zichzelf als hij terugkomt.", "She greets Cley by herself when he comes back."],
+  ["2026-09-01", "Zes snelheidsstenen in de kern: een derde sneller per stap.", "Six speed stones in the core: a third faster per step."],
+  ["2026-09-03", "Het moederbord sterft; verhuizing naar de X399 met een nieuwe voeding.", "The motherboard dies; move to the X399 with a new power supply."],
+  ["2026-09-07", "24 lagen, 42,7 miljoen parameters.", "24 layers, 42.7 million parameters."],
+  ["2026-09-08", "Run 8: 32 lagen en 20 koppen, 189 miljoen parameters, verdeeld over twee kaarten. Lezen en Python erbij, en de val elke 100 stappen.", "Run 8: 32 layers and 20 heads, 189 million parameters, split across two cards. Reading and Python added, and validation loss every 100 steps."],
+  ["2026-09-09", "De keuken: 1,7 GB Nederlands en 44 GB Python als leesstof. Het grote examen elke 50.000 stappen.", "The kitchen: 1.7 GB of Dutch and 44 GB of Python as reading material. The big exam every 50,000 steps."],
+];
+function taal(t) { document.body.className = t; document.documentElement.lang = t; try { localStorage.setItem("taal", t); } catch (e) {} document.getElementById("t-nl").classList.toggle("aan", t === "nl"); document.getElementById("t-en").classList.toggle("aan", t === "en"); }
+(function () { let t = null; try { t = localStorage.getItem("taal"); } catch (e) {} if (!t) t = (navigator.language || "nl").toLowerCase().startsWith("nl") ? "nl" : "en"; taal(t); })();
+const NL = () => document.body.className === "nl";
+const punt = n => (n == null ? "—" : Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, NL() ? "." : ","));
+const $ = id => document.getElementById(id);
+function tekenVal(reeks) {
+  const c = $("valDoek"), ctx = c.getContext("2d"), W = c.width, H = c.height; ctx.clearRect(0, 0, W, H);
+  if (!reeks || reeks.length < 2) return;
+  const ys = reeks.map(r => r[1]), lo = Math.min(...ys), hi = Math.max(...ys), x0 = 48, y0 = 12, w = W - 60, h = H - 40;
+  const X = i => x0 + w * i / (reeks.length - 1), Y = v => y0 + h - h * (v - lo) / Math.max(1e-6, hi - lo);
+  ctx.strokeStyle = "rgba(120,160,255,.14)"; ctx.lineWidth = 1; ctx.font = "11px Menlo,monospace"; ctx.fillStyle = "#96a6d6"; ctx.textAlign = "right";
+  for (let k = 0; k < 5; k++) { const v = lo + (hi - lo) * k / 4, y = Y(v); ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + w, y); ctx.stroke(); ctx.fillText(v.toFixed(2).replace(".", NL() ? "," : "."), x0 - 6, y + 4); }
+  ctx.strokeStyle = "#29d3ff"; ctx.lineWidth = 2; ctx.beginPath(); reeks.forEach((r, i) => i ? ctx.lineTo(X(i), Y(r[1])) : ctx.moveTo(X(i), Y(r[1]))); ctx.stroke();
+  const l = reeks[reeks.length - 1]; ctx.fillStyle = "#ffd23f"; ctx.beginPath(); ctx.arc(X(reeks.length - 1), Y(l[1]), 4, 0, 7); ctx.fill();
+  ctx.fillStyle = "#96a6d6"; ctx.textAlign = "left"; ctx.fillText(punt(reeks[0][0]), x0, H - 6); ctx.textAlign = "right"; ctx.fillText(punt(l[0]), x0 + w, H - 6);
+}
+function toon(d) {
+  const nl = NL();
+  const oud = (Date.now() / 1000 - d.tijd) / 60;
+  $("vers").textContent = nl ? `bijgewerkt ${Math.round(oud)} min geleden` : `updated ${Math.round(oud)} min ago`;
+  $("led").className = "led" + (oud > 30 ? " oud" : "");
+  $("stap").textContent = punt(d.stap); $("doel").textContent = nl ? `van ${punt(d.doel)} in deze run` : `of ${punt(d.doel)} in this run`;
+  $("params").innerHTML = (d.parameters / 1e6).toFixed(0) + " <small>M</small>";
+  $("bouw").textContent = nl ? `${d.lagen} lagen · ${d.koppen} koppen · venster ${punt(d.venster)}` : `${d.lagen} layers · ${d.koppen} heads · window ${punt(d.venster)}`;
+  $("val").textContent = d.val != null ? d.val.toFixed(3).replace(".", nl ? "," : ".") : "—";
+  $("tempo").innerHTML = d.ms ? (d.ms / 1000).toFixed(1).replace(".", nl ? "," : ".") + " <small>s / " + (nl ? "stap" : "step") + "</small>" : "—";
+  $("uren").textContent = d.uren ? (nl ? `${Math.round(d.uren)} uur bouwen sinds 6 aug 2026` : `${Math.round(d.uren)} hours of building since 6 Aug 2026`) : "";
+  tekenVal(d.val_reeks);
+  if (d.val_reeks && d.val_reeks.length) $("valNoot").textContent = nl ? `elke 100 stappen · begin ${d.val_reeks[0][1].toFixed(2).replace(".", ",")} bij ${punt(d.val_reeks[0][0])}` : `every 100 steps · start ${d.val_reeks[0][1].toFixed(2)} at ${punt(d.val_reeks[0][0])}`;
+  const b = $("balken"); b.innerHTML = "";
+  if (d.proefwerk) {
+    $("proefNoot").textContent = nl ? `laatste bij stap ${punt(d.proefwerk.stap)} · zelf schrijven, nooit geoefend` : `latest at step ${punt(d.proefwerk.stap)} · free generation, never trained on`;
+    Object.entries(d.proefwerk.scores).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => { const p = Math.round(v * 100); b.insertAdjacentHTML("beforeend", `<div class="balk"><span>${k}</span><i><b class="${p < 75 ? "laag" : ""}" style="width:${p}%"></b></i><span>${p}%</span></div>`); });
+  }
+  const hk = $("hekken"); hk.innerHTML = "";
+  Object.entries(d.hekken || {}).sort().forEach(([k, v]) => hk.insertAdjacentHTML("beforeend", `<span class="hek">${k} · ${v}</span>`));
+  const ex = $("examens");
+  if (d.examens && d.examens.length) {
+    ex.innerHTML = "";
+    d.examens.slice().reverse().forEach(e => {
+      const beste = Object.entries(e.samenvatting).sort((a, b) => a[1].gemiddeld - b[1].gemiddeld);
+      const zwak = beste[0], sterk = beste[beste.length - 1];
+      ex.insertAdjacentHTML("beforeend", `<a class="kaart examen" href="examens/examen-${e.stap}.html"><div class="k">${nl ? "stap" : "step"} ${punt(e.stap)}</div><div class="g">${e.gemiddeld}%</div><div class="best">${nl ? "sterkst" : "strongest"}: ${sterk[0]} ${Math.round(sterk[1].gemiddeld)}% · ${nl ? "zwakst" : "weakest"}: ${zwak[0]} ${Math.round(zwak[1].gemiddeld)}%</div><div class="best">${punt(e.n)} ${nl ? "opgaven" : "tasks"} · ${nl ? "kaart bekijken →" : "open the map →"}</div></a>`);
+    });
+  }
+  const db = $("dagboek"); db.innerHTML = "";
+  (d.dagboek || []).slice(-40).reverse().forEach(r => db.insertAdjacentHTML("beforeend", `<li><time>${r.tijd} · ${punt(r.stap)}</time><em>${r.vraag}</em> — <b>${r.antwoord}</b></li>`));
+  const tl = $("tijdlijn"); tl.innerHTML = "";
+  TIJDLIJN.forEach(([t, n, e]) => tl.insertAdjacentHTML("beforeend", `<div><time>${t}</time>${nl ? n : e}</div>`));
+}
+let DATA = null;
+fetch("data.json?t=" + Date.now()).then(r => r.json()).then(d => { DATA = d; toon(d); }).catch(() => { $("vers").textContent = "…"; });
+for (const b of document.querySelectorAll(".taal button")) b.addEventListener("click", () => { if (DATA) toon(DATA); });
+</script>
+</body>
+</html>
