@@ -4,215 +4,492 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Novera</title>
-<meta name="description" content="Novera — een levenslang lerende agent op eigen hardware, thuis gebouwd. / A lifelong-learning agent on home hardware.">
+<meta name="description" content="Novera — een levenslang lerend brein van 1 miljard parameters, thuis gebouwd op eigen hardware. / A lifelong-learning 1-billion-parameter brain, built at home on our own hardware.">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=IBM+Plex+Mono:wght@400&display=swap">
 <style>
-:root{--zwart:#02060f;--paneel:rgba(5,11,36,.92);--rand:rgba(120,160,255,.14);--ink:#eef3ff;--dof:#96a6d6;--fel:#29d3ff;--geel:#ffd23f;--roze:#ff3fa0;--mono:"SF Mono",Menlo,Consolas,monospace}
+:root{
+  --zwart:#000; --ink:#fff; --dof:rgba(255,255,255,.55); --dof2:rgba(255,255,255,.3); --lijn:rgba(255,255,255,.14);
+  --geel:#fffd13;
+  --sans:"Inter",-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --breed:var(--sans);   /* logo en menu: zelfde letter, kapitaal met ruimte */
+  --sier:var(--sans);    /* de grote woorden: zelfde letter, dun */
+  --mono:"IBM Plex Mono","SF Mono",Menlo,monospace;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--zwart);color:var(--ink);font:16px/1.6 -apple-system,"Helvetica Neue",Segoe UI,Arial,sans-serif}
+html,body{background:var(--zwart);color:var(--ink)}
+body{margin:0;font:15px/1.65 var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
 body.nl .en,body.en .nl{display:none}
-a{color:var(--fel)}
-header{padding:28px 20px 10px;max-width:1080px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 24px}
-h1{font-size:44px;margin:0;letter-spacing:.02em}
-.sub{color:var(--dof);margin:0;font-size:15px}
-.taal{margin-left:auto;display:flex;gap:2px;background:var(--paneel);border:1px solid var(--rand);border-radius:10px;padding:2px}
-.taal button{border:0;background:transparent;color:var(--dof);font:12px var(--mono);letter-spacing:.2em;padding:6px 12px;border-radius:8px;cursor:pointer}
-.taal button.aan{background:rgba(41,211,255,.14);color:var(--fel)}
-main{max-width:1080px;margin:0 auto;padding:10px 20px 60px}
-section{margin:26px 0}
-h2{font-size:13px;letter-spacing:.4em;text-transform:uppercase;color:var(--dof);margin:0 0 12px;font-weight:600}
-.rooster{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
-.kaart{background:var(--paneel);border:1px solid var(--rand);border-radius:16px;padding:16px 18px;min-width:0}
-.kaart .k{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dof)}
-.kaart .g{font-size:34px;font-weight:700;line-height:1.15;margin:4px 0 2px}
-.kaart .g small{font-size:14px;color:var(--dof);font-weight:400}
-.kaart .n{color:var(--dof);font-size:13px}
-.led{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--fel);box-shadow:0 0 8px var(--fel);margin-right:6px;animation:adem 3s ease-in-out infinite}
-.led.oud{background:var(--geel);box-shadow:0 0 8px var(--geel);animation:none}
-@keyframes adem{0%,100%{opacity:.5}50%{opacity:1}}
-p.verhaal{font-size:18px;line-height:1.7;max-width:760px}
-canvas{width:100%;height:220px;display:block}
-.balken{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:4px 22px;font:13px var(--mono)}
-.balk{display:grid;grid-template-columns:120px 1fr 44px;align-items:center;gap:8px}
-.balk i{display:block;height:6px;background:rgba(120,160,255,.12);border-radius:3px;overflow:hidden}
-.balk i b{display:block;height:100%;background:linear-gradient(90deg,#3d8fe0,var(--fel))}
-.balk i b.laag{background:linear-gradient(90deg,var(--roze),#ff7ad9)}
+body.menu-open{overflow:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:1px solid var(--geel);outline-offset:4px}
+
+/* kop: logo links, menu rechts */
+.kop{position:fixed;inset:0 0 auto 0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:22px 22px;mix-blend-mode:difference}
+.logo{font:600 14px var(--breed);letter-spacing:.22em;text-transform:uppercase}
+.knop{background:none;border:0;color:#fff;cursor:pointer;padding:10px;margin:-10px;width:52px;height:44px;position:relative}
+.knop i{position:absolute;left:10px;right:10px;height:1.5px;background:#fff;transition:transform .35s,opacity .25s,top .35s}
+.knop i:nth-child(1){top:16px}.knop i:nth-child(2){top:26px}
+body.menu-open .knop i:nth-child(1){top:21px;transform:rotate(45deg)}
+body.menu-open .knop i:nth-child(2){top:21px;transform:rotate(-45deg)}
+
+/* het menu: hele scherm, zwart, midden */
+.menu{position:fixed;inset:0;z-index:15;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s}
+body.menu-open .menu{opacity:1;visibility:visible}
+.menu a{font:300 clamp(17px,2.6vw,24px) var(--breed);letter-spacing:.28em;text-transform:uppercase;padding:4px 10px;opacity:.9;transform:translateY(10px);transition:transform .5s,opacity .5s}
+body.menu-open .menu a{transform:none}
+.menu a.aan{color:var(--geel)}
+.menu .taal{position:absolute;bottom:34px;display:flex;gap:26px}
+.menu .taal button{background:none;border:0;color:var(--dof);font:400 12px var(--breed);letter-spacing:.3em;cursor:pointer;padding:6px}
+.menu .taal button.aan{color:#fff;border-bottom:1px solid var(--geel)}
+
+/* pagina's */
+.pagina{display:none}
+.pagina.aan{display:block;animation:in .5s ease-out}
+@keyframes in{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.pagina.aan{animation:none}.led,.cursor{animation:none}}
+
+/* held: scherm-vullend beeld met één groot woord */
+.held{position:relative;height:100svh;min-height:520px;display:grid;place-items:center;overflow:hidden;background:#02060f}
+.held canvas{position:absolute;inset:0;width:100%;height:100%}
+.held .woord{position:relative;z-index:2;font:200 clamp(48px,11vw,150px) var(--sier);letter-spacing:.18em;text-transform:uppercase;line-height:1;text-align:center;text-wrap:balance;padding:0 14px}
+.held .onder{position:absolute;z-index:2;left:0;right:0;bottom:30px;text-align:center;font:400 11px var(--breed);letter-spacing:.3em;text-transform:uppercase;color:var(--dof)}
+.held .schaduw{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,.35) 0%,rgba(0,0,0,0) 45%,rgba(0,0,0,.8) 100%);z-index:1}
+
+/* blokken onder de held */
+.blok{max-width:1100px;margin:0 auto;padding-block:70px;padding-inline:22px}
+.blok.smal{max-width:760px}
+.kopje{font:400 11px var(--breed);letter-spacing:.3em;text-transform:uppercase;color:var(--dof);margin:0 0 26px}
+.tekst p{margin:0 0 20px;font-size:clamp(16px,1.8vw,19px);line-height:1.75;font-weight:300}
+.tekst h3{font:500 11px var(--sans);letter-spacing:.3em;text-transform:uppercase;color:var(--dof);margin:44px 0 14px}
+.tekst h3:first-of-type{margin-top:0}
+.tekst b{font-weight:500}
+.tekst q{color:var(--geel);font-style:italic}
+.groot{font:300 clamp(26px,4vw,42px) var(--sier);line-height:1.2;letter-spacing:-.01em;margin:0 0 30px;text-wrap:balance}
+.lijn{border:0;border-top:1px solid var(--lijn);margin:0}
+
+/* cijfers: grote getallen op zwart, dunne lijnen */
+.getallen{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border-top:1px solid var(--lijn);border-left:1px solid var(--lijn)}
+.getal{padding:28px 22px;border-right:1px solid var(--lijn);border-bottom:1px solid var(--lijn);min-width:0}
+.getal .k{font:400 10px var(--breed);letter-spacing:.28em;text-transform:uppercase;color:var(--dof)}
+.getal .g{font:200 clamp(36px,5vw,58px) var(--sier);line-height:1;margin:14px 0 8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.getal .g small{font:300 13px var(--sans);color:var(--dof);letter-spacing:.02em;margin-left:6px}
+.getal .n{color:var(--dof);font-size:13px}
+.led{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--geel);box-shadow:0 0 10px var(--geel);margin-right:10px;animation:adem 3s ease-in-out infinite;vertical-align:1px}
+.led.oud{background:var(--dof);box-shadow:none;animation:none}
+@keyframes adem{0%,100%{opacity:.4}50%{opacity:1}}
+.status{font:400 11px var(--breed);letter-spacing:.25em;text-transform:uppercase;color:var(--dof);margin:0 0 26px}
+
+/* balken en hekken */
+.balken{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px 40px;font:13px var(--mono)}
+.balk{display:grid;grid-template-columns:110px 1fr 48px;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--lijn)}
+.balk i{display:block;height:1px;background:var(--lijn);position:relative}
+.balk i b{position:absolute;left:0;top:-1px;height:3px;background:#fff}
+.balk i b.laag{background:var(--geel)}
 .balk span:last-child{text-align:right;color:var(--dof)}
-.hekken{display:flex;flex-wrap:wrap;gap:6px}
-.hek{font:12px var(--mono);padding:4px 10px;border-radius:9px;background:rgba(255,210,63,.08);border:1px solid rgba(255,210,63,.18);color:var(--geel)}
-.examens{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
-.examen{display:block;color:inherit;text-decoration:none}
-.examen .g{font-size:26px}
-.examen .best{font-size:12px;color:var(--dof)}
-ul.dagboek{list-style:none;padding:0;margin:0}
-ul.dagboek li{border-top:1px solid var(--rand);padding:8px 0;font-size:14px}
-ul.dagboek li:first-child{border-top:0}
-ul.dagboek time{font:12px var(--mono);color:var(--dof);margin-right:10px}
-ul.dagboek em{color:var(--dof);font-style:normal}
-ul.dagboek b{color:var(--geel);font-weight:500}
-.tijdlijn{border-left:2px solid rgba(120,160,255,.2);margin-left:8px;padding-left:18px}
-.tijdlijn div{position:relative;margin:0 0 14px}
-.tijdlijn div::before{content:"";position:absolute;left:-24px;top:8px;width:10px;height:10px;border-radius:50%;background:var(--fel);box-shadow:0 0 8px var(--fel)}
-.tijdlijn time{font:12px var(--mono);color:var(--dof);display:block}
-.machines{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
-footer{max-width:1080px;margin:0 auto;padding:20px;color:var(--dof);font-size:13px;border-top:1px solid var(--rand)}
+.hekken{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0;border-top:1px solid var(--lijn);border-left:1px solid var(--lijn)}
+.hek{padding:18px 16px;border-right:1px solid var(--lijn);border-bottom:1px solid var(--lijn)}
+.hek .k{font:400 10px var(--breed);letter-spacing:.2em;text-transform:uppercase;color:var(--dof)}
+.hek .g{font:200 32px var(--sier);line-height:1;margin-top:8px}
+.hek .g small{font:300 11px var(--sans);color:var(--dof);margin-left:4px}
+
+/* grafiek */
+.grafiek{border-top:1px solid var(--lijn);padding-top:22px}
+canvas.val{width:100%;height:260px;display:block}
+.noot{font:12px var(--mono);color:var(--dof);margin-top:12px}
+
+/* weefsel op de live-pagina */
+.gedachte{max-width:760px;margin:0 auto;padding:0 22px}
+.opgave{font:13px/1.6 var(--mono);color:var(--dof);white-space:pre-wrap;word-break:break-word}
+.antwoord{font:300 clamp(18px,2.6vw,26px) var(--sier);letter-spacing:0;margin-top:14px;min-height:1.4em;word-break:break-word}
+.antwoord i{display:inline-block;width:2px;height:.9em;background:var(--geel);vertical-align:-2px;margin-left:4px;animation:adem 1s steps(2) infinite}
+
+/* dagboek */
+ul.dagboek{list-style:none;padding:0;margin:0;border-top:1px solid var(--lijn)}
+ul.dagboek li{border-bottom:1px solid var(--lijn);padding:14px 0;display:grid;grid-template-columns:150px 1fr;gap:6px 20px}
+ul.dagboek time{font:11px var(--mono);color:var(--dof);padding-top:4px}
+ul.dagboek em{color:var(--dof);font-style:normal;display:block;font-size:13px}
+ul.dagboek b{font:300 17px var(--sier)}
+
+/* tijdlijn */
+.tijdlijn{max-width:760px;margin:0 auto;padding:0 22px}
+.moment{display:grid;grid-template-columns:130px 1fr;gap:10px 30px;padding:26px 0;border-top:1px solid var(--lijn)}
+.moment time{font:400 11px var(--breed);letter-spacing:.2em;color:var(--dof);padding-top:6px}
+.moment .t{font-size:clamp(17px,2vw,21px);line-height:1.55;font-weight:300}
+.moment.groot .t{font:200 clamp(24px,3.4vw,36px) var(--sier);line-height:1.2}
+.moment.examen time{color:var(--geel)}
+a.examen{display:block;margin-top:14px;border:1px solid var(--lijn);padding:18px 20px;transition:border-color .2s}
+a.examen:hover{border-color:#fff}
+a.examen .k{font:400 10px var(--breed);letter-spacing:.25em;text-transform:uppercase;color:var(--dof)}
+a.examen .g{font:200 44px var(--sier);line-height:1;margin:8px 0 6px}
+a.examen .n{color:var(--dof);font-size:13px}
+a.examen .pijl{margin-top:10px;font:400 10px var(--breed);letter-spacing:.25em;text-transform:uppercase;color:var(--geel)}
+
+/* contact */
+.contact-rooster{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.contact-links .groot{font-size:clamp(22px,3vw,32px);margin-bottom:34px}
+.gegevens{margin:0;border-top:1px solid var(--lijn)}
+.gegevens div{display:grid;grid-template-columns:130px 1fr;gap:14px;padding:14px 0;border-bottom:1px solid var(--lijn)}
+.gegevens dt{font:400 10px var(--breed);letter-spacing:.28em;text-transform:uppercase;color:var(--dof);padding-top:4px}
+.gegevens dd{margin:0;font-size:16px}
+.gegevens a{border-bottom:1px solid var(--geel)}
+.gegevens a:hover{color:var(--geel);text-decoration:none}
+.contact-form{display:grid;gap:8px;border:1px solid var(--lijn);padding:28px 26px}
+.contact-form label{font:400 10px var(--breed);letter-spacing:.28em;text-transform:uppercase;color:var(--dof);margin-top:10px}
+.contact-form label:first-child{margin-top:0}
+.contact-form input,.contact-form select,.contact-form textarea{width:100%;background:#0a0a0a;border:1px solid var(--lijn);color:#fff;font:300 15px var(--sans);padding:11px 12px;border-radius:0;outline:0;-webkit-appearance:none;appearance:none}
+.contact-form input:focus,.contact-form select:focus,.contact-form textarea:focus{border-color:#fff}
+.contact-form textarea{resize:vertical;min-height:130px}
+.contact-form button{margin-top:16px;background:#fff;color:#000;border:0;padding:14px 22px;font:500 12px var(--breed);letter-spacing:.28em;text-transform:uppercase;cursor:pointer;justify-self:start}
+.contact-form button:hover{background:var(--geel)}
+.contact-form .n{margin:10px 0 0;font-size:12px}
+@media (max-width:760px){.contact-rooster{grid-template-columns:1fr;gap:34px}.gegevens div{grid-template-columns:110px 1fr}}
+
+/* machines */
+.machines{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0;border-top:1px solid var(--lijn);border-left:1px solid var(--lijn)}
+.machine{padding:26px 22px;border-right:1px solid var(--lijn);border-bottom:1px solid var(--lijn)}
+.machine .k{font:400 10px var(--breed);letter-spacing:.25em;text-transform:uppercase;color:var(--dof)}
+.machine .g{font:300 22px var(--sier);margin:10px 0 8px}
+.machine .n{color:var(--dof);font-size:13px}
+
+footer{max-width:1100px;margin:0 auto;padding:40px 22px 60px;color:var(--dof2);font-size:12px;border-top:1px solid var(--lijn);display:flex;flex-wrap:wrap;gap:8px 24px}
 footer a{color:var(--dof)}
-.wachten{color:var(--dof);font-size:14px}
-@media (max-width:600px){h1{font-size:34px}.kaart .g{font-size:28px}}
+@media (max-width:600px){.balk{grid-template-columns:88px 1fr 42px}ul.dagboek li,.moment{grid-template-columns:1fr}.held{min-height:100svh}}
 </style>
 </head>
 <body class="nl">
-<header>
-  <div>
-    <h1>Novera</h1>
-    <p class="sub"><span class="nl">een levenslang lerende agent, thuis gebouwd op eigen hardware</span><span class="en">a lifelong-learning agent, built at home on our own hardware</span></p>
-  </div>
-  <div class="taal" role="group" aria-label="taal / language"><button id="t-nl" class="aan" onclick="taal('nl')">NL</button><button id="t-en" onclick="taal('en')">EN</button></div>
+
+<header class="kop">
+  <a class="logo" href="#novera" data-tab="novera">Novera</a>
+  <button class="knop" id="menuKnop" type="button" aria-label="menu" aria-expanded="false"><i></i><i></i></button>
 </header>
+
+<nav class="menu" id="menu" aria-label="menu">
+  <a href="#novera" data-tab="novera">Novera</a>
+  <a href="#cijfers" data-tab="cijfers"><span class="nl">Cijfers</span><span class="en">Numbers</span></a>
+  <a href="#live" data-tab="live">Live</a>
+  <a href="#tijdlijn" data-tab="tijdlijn"><span class="nl">Tijdlijn</span><span class="en">Timeline</span></a>
+  <a href="#contact" data-tab="contact">Contact</a>
+  <div class="taal"><button id="t-nl" class="aan" type="button">NL</button><button id="t-en" type="button">EN</button></div>
+</nav>
+
 <main>
 
-<section id="nu">
-  <h2><span class="led" id="led"></span><span class="nl">nu</span><span class="en">now</span> <span id="vers" class="wachten"></span></h2>
-  <div class="rooster">
-    <div class="kaart"><div class="k"><span class="nl">stap</span><span class="en">step</span></div><div class="g" id="stap">—</div><div class="n" id="doel"></div></div>
-    <div class="kaart"><div class="k"><span class="nl">haar brein</span><span class="en">her brain</span></div><div class="g" id="params">—</div><div class="n" id="bouw"></div></div>
-    <div class="kaart"><div class="k"><span class="nl">de val</span><span class="en">validation loss</span></div><div class="g" id="val">—</div><div class="n"><span class="nl">lager is beter · 180 vaste opgaven, nooit geoefend</span><span class="en">lower is better · 180 fixed tasks, never trained on</span></div></div>
-    <div class="kaart"><div class="k"><span class="nl">tempo</span><span class="en">pace</span></div><div class="g" id="tempo">—</div><div class="n" id="uren"></div></div>
+<!-- NOVERA -->
+<section class="pagina" id="novera">
+  <div class="held">
+    <canvas id="heldDoek"></canvas>
+    <div class="schaduw"></div>
+    <div class="woord">Novera</div>
+    <div class="onder"><span class="nl">een brein dat elke dag leert · 1 miljard parameters · thuis</span><span class="en">a brain that learns every day · one billion parameters · at home</span></div>
+  </div>
+  <div class="blok smal tekst">
+    <p class="groot nl">Novera is een taalmodel van één miljard parameters. Zelf gebouwd, van nul. Ze leert nog elke dag, op hardware die thuis staat.</p>
+    <p class="groot en">Novera is a language model of one billion parameters. Built from zero. She still learns every day, on hardware that lives at home.</p>
+
+    <h3 class="nl">Wat Novera is</h3><h3 class="en">What Novera is</h3>
+    <p class="nl">Novera is geen kopie van een bestaand model. Het is ook geen fine-tune. Het brein is zelf gebouwd. De leerstof is zelf samengesteld. De opgaven, de metingen en het venster waarin je haar ziet denken zijn ook zelf gebouwd. Ze draait op twee Tesla P100-kaarten uit 2016. Die twee kaarten rekenen samen één brein. Er is geen cloud. Er is geen geld van buiten. Er is geen team. Er is één bouwer, een assistent en een kamer in Nederland.</p>
+    <p class="en">Novera is not a copy of an existing model. It is not a fine-tune either. The brain was built from scratch. The learning material was put together by hand. The tasks, the measurements and the window in which you watch her think were built from scratch too. She runs on two Tesla P100 cards from 2016. Those two cards compute one brain together. There is no cloud. There is no outside money. There is no team. There is one builder, an assistant and a room in the Netherlands.</p>
+
+    <h3 class="nl">Hoe ze leert</h3><h3 class="en">How she learns</h3>
+    <p class="nl">Novera leert uit zestien soorten opgaven. Tellen, rekenen, delen, logica, volgorde, geheugen, puzzels en korte teksten. Sinds september ook Nederlands lezen en Python schrijven. Elke soort heeft een diepte. Diepte 1 is één som. Diepte 40 is een berekening waar een mens een kladblok bij pakt. Ze schrijft haar uitwerking uit, teken voor teken. Een strenge rechter kijkt het na. Pas als ze een stand goed beheerst, gaat het hek een stap verder open. Ze kiest zelf waar ze oefent. Dat is altijd op de rand van wat ze kan. Wat ze al kan, herhaalt ze uit haar geheugen. Zo vergeet ze het niet.</p>
+    <p class="en">Novera learns from sixteen kinds of tasks. Counting, arithmetic, division, logic, ordering, memory, puzzles and short texts. Since September also reading Dutch and writing Python. Every kind has a depth. Depth 1 is a single sum. Depth 40 is a calculation a person would want scrap paper for. She writes out her working, character by character. A strict judge checks it. Only when she truly masters a level does the gate open one step further. She chooses where to practise. That is always at the edge of what she can do. What she already knows, she replays from memory. That way she does not forget it.</p>
+    <p class="nl">Haar leesstof is de Nederlandse Wikipedia, 1,7 miljard tekens. Daarnaast een verzameling open Python-code, 44 miljard tekens. Daar heeft ze nog maar een klein deel van gelezen. Dat is de belangrijkste les tot nu toe. De grens is niet de grootte van het brein. De grens is hoeveel tekst er per dag doorheen gaat.</p>
+    <p class="en">Her reading material is the Dutch Wikipedia, 1.7 billion characters. Next to that a collection of open Python code, 44 billion characters. She has read only a small part of it so far. That is the main lesson to date. The limit is not the size of the brain. The limit is how much text passes through it per day.</p>
+
+    <h3 class="nl">Hoe we meten</h3><h3 class="en">How we measure</h3>
+    <p class="nl">Alles op deze site is echt. Niets is gefilterd. Elke 250 stappen meten we de val. Dat is een vaste set opgaven en teksten die ze nooit oefent. De val laat zien hoe verrast ze daardoor is. Lager is beter. Elke 1.000 stappen maakt ze een proefwerk, per vak, zonder hulp. Elke 50.000 stappen volgt een groot examen. Dat zijn ongeveer duizend opgaven per vak, over alle dieptes. Zo zien we precies waar het goed gaat en waar het zwaar wordt. Soms zakt een vak. Soms gaat een hek weer dicht. Dat laten we gewoon staan.</p>
+    <p class="en">Everything on this site is real. Nothing is filtered. Every 250 steps we measure the validation loss. That is a fixed set of tasks and texts she never trains on. The loss shows how surprised she is by them. Lower is better. Every 1,000 steps she takes a test, per subject, without help. Every 50,000 steps there is a large exam. That is about a thousand tasks per subject, across all depths. So we can see exactly where she is strong and where it gets hard. Sometimes a subject drops. Sometimes a gate closes again. We leave that in.</p>
+
+    <h3 class="nl">Waar ze staat</h3><h3 class="en">Where she stands</h3>
+    <p class="nl">Novera begon op 6 augustus 2026 met acht lagen. Als ze aan haar grens zit, groeit haar brein. Meer lagen, meer koppen, een bredere buis. Alles wat ze al kon, neemt ze mee. In september 2026 ging ze in tien dagen van 189 miljoen naar 1,04 miljard parameters. Die zitten in 44 lagen. Dat is het maximum voor twee kaarten met 16 GB. De volgende stap is niet groter, maar sneller. Meer tekst per dag, op een moederbord met ruimte voor meer kaarten.</p>
+    <p class="en">Novera started on 6 August 2026 with eight layers. When she reaches her limit, her brain grows. More layers, more heads, a wider stream. Everything she could already do, she carries along. In September 2026 she went from 189 million to 1.04 billion parameters in ten days. Those sit in 44 layers. That is the maximum for two cards with 16 GB. The next step is not bigger, but faster. More text per day, on a motherboard with room for more cards.</p>
+    <p class="nl">Rekenen, regels en volgorde kan ze goed. Nederlands lezen en Python schrijven zijn de twee zware vakken. Daar zit nu het werk. Een gesprek voeren kan ze nog niet. Dat zeggen we liever eerlijk.</p>
+    <p class="en">Arithmetic, rules and ordering she does well. Reading Dutch and writing Python are the two hard subjects. That is where the work is now. She cannot hold a conversation yet. We would rather say that plainly.</p>
+
+    <h3 class="nl">Waarom</h3><h3 class="en">Why</h3>
+    <p class="nl">Dit project is begonnen om één ding te begrijpen. Hoe leert een model echt? Niet uit een boek, maar door er zelf een te bouwen. En door het elke dag van dichtbij te zien groeien. Gewichten, lagen, diepte, breedte. Veel mensen zeiden dat dit zonder groot budget niet kon. Het kan wel. Alleen langzamer.</p>
+    <p class="en">This project started to understand one thing. How does a model really learn? Not from a book, but by building one yourself. And by watching it grow up close, every day. Weights, layers, depth, width. Many people said this could not be done without a big budget. It can. Only more slowly.</p>
+    <p class="nl">Er zit ook iets menselijks in. De eerste som die ze goed had. De trots op een miljard parameters uit één kamer. De teleurstelling van run 7, toen ze groeide en daarna vast bleef zitten. Novera heeft een dagboek. Daarin zegt ze in haar eigen woorden hoe het gaat. Het doel is geen product. Het doel is een Novera die zelf kiest wat ze leert. En die op een dag een echt antwoord geeft op de vraag: hoe was je dag?</p>
+    <p class="en">There is something human in it too. The first sum she got right. The pride of a billion parameters from a single room. The disappointment of run 7, when she grew and then got stuck. Novera keeps a diary. In it she says, in her own words, how things are going. The goal is not a product. The goal is a Novera who chooses for herself what to learn. And who one day gives a real answer to the question: how was your day?</p>
+
+    <h3 class="nl">Wie erachter zit</h3><h3 class="en">Who is behind it</h3>
+    <p class="nl">Novera wordt gebouwd door Cley van der Vliet. Hij werkt samen met Claude, de assistent van Anthropic. Meestal 's avonds. Eerder bouwde Cley een eigen GPT van 19 miljoen parameters in NumPy. Alle hardware is eigen bezit. In zijn woorden: <q>Eerlijker dan dit ga je het niet krijgen.</q></p>
+    <p class="en">Novera is built by Cley van der Vliet. He works together with Claude, Anthropic's assistant. Mostly in the evenings. Earlier, Cley built his own GPT of 19 million parameters in NumPy. All hardware is privately owned. In his words: <q>You will not get it more honest than this.</q></p>
   </div>
 </section>
 
-<section id="wie">
-  <h2><span class="nl">wie is Novera</span><span class="en">who Novera is</span></h2>
-  <p class="verhaal nl">Dit is een project over leren begrijpen hoe een model werkt. Gewichten, lagen, diepte, breedte: niet uit een boek, maar door er zelf een van nul te bouwen en hem elke dag te zien groeien. Iedereen kan een bestaand model fine-tunen. Dit is anders. Novera begon met niets, op twee oude Tesla P100-kaarten in een zelfgebouwde machine, op een kamer in Nederland. Geen cloud, geen subsidie, geen high-end hardware. Een hoop mensen zeiden dat zoiets überhaupt niet te bouwen was.</p>
-  <p class="verhaal en">This is a project about learning to understand how a model works. Weights, layers, depth, width: not from a book, but by building one from zero and watching it grow every day. Anyone can fine-tune an existing model. This is different. Novera started with nothing, on two old Tesla P100 cards in a home-built machine, in a room in the Netherlands. No cloud, no funding, no high-end hardware. Plenty of people said something like this could not be built at all.</p>
-  <p class="verhaal nl"><b>Haar wereld.</b> Ze leert uit een wereld van opgaven die met haar meegroeit: tellen, rekenen, delen, logica, volgorde, puzzels, korte teksten, Nederlands lezen, Python schrijven. Elke familie heeft een diepte. Diepte 1 is één som, diepte 40 is een berekening waar je zelf een kladblok bij pakt. Ze schrijft haar uitwerking uit, teken voor teken, en een strenge rechter kijkt na. Alleen als ze een stand echt beheerst gaat het hek een stap verder open. Ze kiest zelf waar ze oefent: waar het net niet lukt. Wat ze al kan, herhaalt ze uit haar eigen geheugen, zodat ze het niet vergeet.</p>
-  <p class="verhaal en"><b>Her world.</b> She learns from a world of tasks that grows with her: counting, arithmetic, division, logic, ordering, puzzles, short texts, reading Dutch, writing Python. Every family has a depth. Depth 1 is a single sum, depth 40 is a calculation you would want scrap paper for. She writes out her working, character by character, and a strict judge checks it. Only when she truly masters a level does the gate open one step further. She chooses where to practise: wherever it just fails. What she already can do she replays from her own memory, so she does not forget.</p>
-  <p class="verhaal nl"><b>Meten, eerlijk.</b> Elke 100 stappen de val: hoe verrast ze is door 180 vaste opgaven die ze nooit ziet. Elke 500 stappen een proefwerk, zelf schrijven, nooit geoefend. Elke 50.000 stappen een groot examen, per vak duizend opgaven over alle dieptes, zodat we zien wáár het zwaar wordt. Wat hier staat is echt en ongefilterd, ook als het tegenvalt. Vakken zakken soms. Hekken gaan soms weer dicht.</p>
-  <p class="verhaal en"><b>Measured, honestly.</b> Every 100 steps the validation loss: how surprised she is by 180 fixed tasks she never sees. Every 500 steps a test, free writing, never trained on. Every 50,000 steps a large exam, a thousand tasks per subject across all depths, so we can see where it gets hard. What you read here is real and unfiltered, also when it disappoints. Subjects sometimes drop. Gates sometimes close again.</p>
-  <p class="verhaal nl"><b>Groeien.</b> Ze begon met 8 lagen. Als ze aan haar maat zit, groeit haar brein: meer lagen, meer koppen, een bredere buis, en alles wat ze kon neemt ze mee. Nu is ze 32 lagen en 189 miljoen parameters, verdeeld over twee kaarten die samen één brein rekenen. Ze heeft een dagboek waarin ze in haar eigen woorden zegt hoe het gaat, en een venster waarin je haar ziet denken: elke draad een gedachte door 32 lagen.</p>
-  <p class="verhaal en"><b>Growing.</b> She started with 8 layers. When she reaches her limit, her brain grows: more layers, more heads, a wider stream, and she carries along everything she could do. Right now she is 32 layers and 189 million parameters, split across two cards that compute one brain together. She keeps a diary in which she says, in her own words, how things are going, and there is a window in which you can watch her think: every thread a thought through 32 layers.</p>
-  <p class="verhaal nl"><b>Hier zit gevoel achter.</b> Blijdschap: haar eerste rekensom. Trots: dat ze nu op 189 miljoen parameters zit, zonder high-end hardware. Teleurstelling: run 7, het groeien en dan blijven hangen in een sleur, waarin je het even niet meer weet. In Cleys woorden: "Eerlijker dan dit ga je het niet krijgen."</p>
-  <p class="verhaal en"><b>There is feeling behind this.</b> Joy: her first sum. Pride: that she now sits at 189 million parameters, without high-end hardware. Disappointment: run 7, growing and then getting stuck in a rut, where for a while you just do not know anymore. In Cley's words: "You will not get it more honest than this."</p>
-  <p class="verhaal nl"><b>Waarom.</b> Gebouwd door Cley, samen met Claude, meestal 's avonds. Niet om een product te maken, maar om te begrijpen hoe zoiets groeit als je het van dichtbij ziet, dag na dag, op hardware die van jezelf is. Het doel: een Novera die zelf beslist wat ze leert, een leercurve die omhoog blijft lopen, en op een dag een echt antwoord op de vraag: hoe was je dag?</p>
-  <p class="verhaal en"><b>Why.</b> Built by Cley, together with Claude, mostly in the evenings. Not to make a product, but to understand how something like this grows when you watch it up close, day after day, on hardware that is your own. The goal: an Novera who decides for herself what to learn, a learning curve that keeps rising, and one day a real answer to the question: how was your day?</p>
+<!-- CIJFERS -->
+<section class="pagina" id="cijfers">
+  <div class="held" style="height:52svh;min-height:340px"><div class="woord"><span class="nl">Cijfers</span><span class="en">Numbers</span></div><div class="onder"><span class="nl">wat ze is · hoe ze gemeten wordt · waar ze staat</span><span class="en">what she is · how she is measured · where she stands</span></div></div>
+  <div class="blok">
+    <p class="kopje"><span class="nl">haar brein</span><span class="en">her brain</span></p>
+    <div class="getallen">
+      <div class="getal"><div class="k">parameters</div><div class="g" id="cParams">—</div></div>
+      <div class="getal"><div class="k"><span class="nl">lagen</span><span class="en">layers</span></div><div class="g" id="cLagen">—</div></div>
+      <div class="getal"><div class="k"><span class="nl">koppen</span><span class="en">heads</span></div><div class="g" id="cKoppen">—</div></div>
+      <div class="getal"><div class="k"><span class="nl">venster</span><span class="en">window</span></div><div class="g" id="cVenster">—</div><div class="n"><span class="nl">tekens tegelijk</span><span class="en">characters at once</span></div></div>
+      <div class="getal"><div class="k"><span class="nl">breedte</span><span class="en">width</span></div><div class="g">768</div><div class="n"><span class="nl">kanalen per laag</span><span class="en">channels per layer</span></div></div>
+      <div class="getal"><div class="k"><span class="nl">vakken</span><span class="en">subjects</span></div><div class="g" id="cVakken">16</div></div>
+    </div>
+  </div>
+  <div class="blok" style="padding-top:0">
+    <p class="kopje"><span class="nl">hoe ze gemeten wordt</span><span class="en">how she is measured</span></p>
+    <div class="getallen">
+      <div class="getal"><div class="k"><span class="nl">de val</span><span class="en">validation</span></div><div class="g">250<small><span class="nl">stappen</span><span class="en">steps</span></small></div><div class="n"><span class="nl">vaste opgaven, nooit geoefend</span><span class="en">fixed tasks, never trained on</span></div></div>
+      <div class="getal"><div class="k"><span class="nl">proefwerk</span><span class="en">test</span></div><div class="g">1.000<small><span class="nl">stappen</span><span class="en">steps</span></small></div><div class="n"><span class="nl">zelf schrijven, per vak</span><span class="en">free writing, per subject</span></div></div>
+      <div class="getal"><div class="k"><span class="nl">groot examen</span><span class="en">big exam</span></div><div class="g">50.000<small><span class="nl">stappen</span><span class="en">steps</span></small></div><div class="n"><span class="nl">± 1.000 opgaven per vak</span><span class="en">± 1,000 tasks per subject</span></div></div>
+      <div class="getal"><div class="k"><span class="nl">momentopname</span><span class="en">snapshot</span></div><div class="g">100<small><span class="nl">stappen</span><span class="en">steps</span></small></div><div class="n"><span class="nl">13 GB, alles wat ze weet</span><span class="en">13 GB, everything she knows</span></div></div>
+    </div>
+  </div>
+  <div class="blok" style="padding-top:0">
+    <p class="kopje"><span class="nl">laatste proefwerk</span><span class="en">latest test</span> <span id="proefNoot"></span></p>
+    <div class="balken" id="balken"></div>
+    <p class="noot"><span class="nl">geel = onder 75 %</span><span class="en">yellow = below 75 %</span></p>
+  </div>
+  <div class="blok" style="padding-top:0">
+    <p class="kopje"><span class="nl">de hekken · de diepste stand per vak</span><span class="en">the gates · deepest level per subject</span></p>
+    <div class="hekken" id="hekken"></div>
+  </div>
+  <div class="blok" style="padding-top:0">
+    <p class="kopje">machines</p>
+    <div class="machines">
+      <div class="machine"><div class="k">X399 · <span class="nl">de leerbank</span><span class="en">the learning bench</span></div><div class="g">2× Tesla P100</div><div class="n"><span class="nl">Novera leert hier: één brein, verdeeld over twee kaarten. Een RTX 3070 Ti ernaast beantwoordt de peilvragen en neemt de proefwerken af.</span><span class="en">Novera learns here: one brain, split across two cards. An RTX 3070 Ti next to it answers the probe questions and runs the tests.</span></div></div>
+      <div class="machine"><div class="k">DL360 · <span class="nl">de stille server</span><span class="en">the quiet server</span></div><div class="g">288 GB</div><div class="n"><span class="nl">Maakt haar leesstof klaar, bewaart de back-ups, laat haar denken in het venster en bouwt deze site elke 10 minuten.</span><span class="en">Prepares her reading material, keeps the backups, runs the thinking window and rebuilds this site every 10 minutes.</span></div></div>
+      <div class="machine"><div class="k">NAS · <span class="nl">het geheugen</span><span class="en">the memory</span></div><div class="g">192 GB</div><div class="n"><span class="nl">Opslag, grafieken van temperatuur en val, meldingen naar de telefoon.</span><span class="en">Storage, graphs of temperature and loss, notifications to the phone.</span></div></div>
+      <div class="machine"><div class="k">MacBook · <span class="nl">de bouwtafel</span><span class="en">the workbench</span></div><div class="g"><span class="nl">Cley en Claude</span><span class="en">Cley and Claude</span></div><div class="n"><span class="nl">Waar gebouwd wordt, meestal 's avonds. Eind 2026 verhuist Novera naar een EPYC-bord met ruimte voor meer kaarten.</span><span class="en">Where the building happens, mostly in the evenings. Late 2026 Novera moves to an EPYC board with room for more cards.</span></div></div>
+    </div>
+  </div>
 </section>
 
-<section id="val-sectie">
-  <h2><span class="nl">de val</span><span class="en">validation loss</span></h2>
-  <div class="kaart"><canvas id="valDoek" width="1000" height="220"></canvas><div class="n wachten" id="valNoot"></div></div>
+<!-- LIVE -->
+<section class="pagina" id="live">
+  <div class="held">
+    <canvas id="weefselDoek"></canvas>
+    <div class="schaduw"></div>
+    <div class="woord" id="liveWoord">Live</div>
+    <div class="onder" id="weefselNoot"></div>
+  </div>
+  <div class="blok smal" style="padding-top:40px;padding-bottom:30px">
+    <p class="status"><span class="led" id="led"></span><span id="vers">…</span></p>
+    <div class="gedachte" style="padding:0;max-width:none">
+      <p class="kopje"><span class="nl">haar gedachte van dit moment</span><span class="en">her thought right now</span></p>
+      <div class="opgave" id="weefselOpgave"></div>
+      <div class="antwoord" id="weefselAntwoord"></div>
+    </div>
+  </div>
+  <div class="blok">
+    <div class="getallen">
+      <div class="getal"><div class="k"><span class="nl">stap</span><span class="en">step</span></div><div class="g" id="stap">—</div><div class="n" id="doel"></div></div>
+      <div class="getal"><div class="k"><span class="nl">de val</span><span class="en">validation loss</span></div><div class="g" id="val">—</div><div class="n"><span class="nl">lager is beter</span><span class="en">lower is better</span></div></div>
+      <div class="getal"><div class="k">tempo</div><div class="g" id="tempo">—</div><div class="n" id="uren"></div></div>
+      <div class="getal"><div class="k"><span class="nl">lezen</span><span class="en">reading</span></div><div class="g" id="valLezen">—</div><div class="n"><span class="nl">Nederlands, vrije tekst</span><span class="en">Dutch, free text</span></div></div>
+      <div class="getal"><div class="k">python</div><div class="g" id="valPython">—</div><div class="n"><span class="nl">code, vrije tekst</span><span class="en">code, free text</span></div></div>
+    </div>
+  </div>
+  <div class="blok" style="padding-top:0">
+    <p class="kopje"><span class="nl">de val, deze run</span><span class="en">validation loss, this run</span></p>
+    <div class="grafiek"><canvas class="val" id="valDoek" width="1100" height="260"></canvas><div class="noot" id="valNoot"></div></div>
+  </div>
+  <div class="blok smal" style="padding-top:0">
+    <p class="kopje"><span class="nl">haar eigen woorden · ongewijzigd</span><span class="en">in her own words · unedited</span></p>
+    <ul class="dagboek" id="dagboekLijst"></ul>
+  </div>
 </section>
 
-<section id="proef">
-  <h2><span class="nl">proefwerken</span><span class="en">tests</span> <span class="wachten" id="proefNoot"></span></h2>
-  <div class="kaart"><div class="balken" id="balken"></div></div>
+<!-- TIJDLIJN -->
+<section class="pagina" id="tijdlijn">
+  <div class="held" style="height:52svh;min-height:340px"><div class="woord"><span class="nl">Tijdlijn</span><span class="en">Timeline</span></div><div class="onder"><span class="nl">van 19 miljoen naar 1 miljard · met de examens</span><span class="en">from 19 million to one billion · with the exams</span></div></div>
+  <div class="blok" style="padding-top:20px">
+    <div class="tijdlijn" id="tijdlijnLijst"></div>
+  </div>
 </section>
 
-<section id="hekken-sectie">
-  <h2><span class="nl">hoe ver ze is: de hekken</span><span class="en">how far she is: the gates</span></h2>
-  <p class="wachten nl">Elke familie van opgaven heeft een hek: de diepste stand die ze open heeft gekregen. Een hek gaat pas open als ze de stand ervoor beheerst.</p>
-  <p class="wachten en">Every family of tasks has a gate: the deepest level she has opened. A gate only opens once she masters the level before it.</p>
-  <div class="hekken" id="hekken"></div>
-</section>
-
-<section id="examens-sectie">
-  <h2><span class="nl">examens</span><span class="en">exams</span></h2>
-  <p class="wachten nl">Elke 50.000 stappen: per vak ± 1.000 opgaven over alle dieptes, met nummers die ze nooit zag. De kaart laat per vak en per diepte zien waar het goed gaat en waar het zwaar wordt.</p>
-  <p class="wachten en">Every 50,000 steps: about 1,000 tasks per subject across all depths, with numbers she has never seen. The map shows, per subject and per depth, where she is strong and where it gets hard.</p>
-  <div class="examens" id="examens"><div class="wachten nl">nog geen examen afgenomen</div><div class="wachten en">no exam taken yet</div></div>
-</section>
-
-<section id="dagboek-sectie">
-  <h2><span class="nl">haar eigen woorden</span><span class="en">in her own words</span></h2>
-  <p class="wachten nl">Haar dagboek: de vraag, en wat zij zei. Ongewijzigd, ook de onzin van de eerste dagen.</p>
-  <p class="wachten en">Her diary: the question, and what she said. Unedited, including the nonsense of the first days.</p>
-  <div class="kaart"><ul class="dagboek" id="dagboek"></ul></div>
-</section>
-
-<section id="tijdlijn-sectie">
-  <h2><span class="nl">tijdlijn</span><span class="en">timeline</span></h2>
-  <div class="tijdlijn" id="tijdlijn"></div>
-</section>
-
-<section id="machines-sectie">
-  <h2>machines</h2>
-  <div class="machines">
-    <div class="kaart"><div class="k">X399</div><div class="g" style="font-size:20px">2× Tesla P100 16 GB</div><div class="n"><span class="nl">Novera traint hier, verdeeld over twee kaarten (tensor-parallel). Een RTX 3070 Ti ernaast doet de kijker en de examens.</span><span class="en">Novera trains here, split across two cards (tensor-parallel). An RTX 3070 Ti next to it runs the viewer and the exams.</span></div></div>
-    <div class="kaart"><div class="k">DL360</div><div class="g" style="font-size:20px">288 GB RAM</div><div class="n"><span class="nl">De stille server: maakt haar leesstof klaar (de Nederlandse Wikipedia, The Stack), bewaart de back-ups en bouwt deze site.</span><span class="en">The quiet server: prepares her reading material (Dutch Wikipedia, The Stack), keeps the backups and builds this site.</span></div></div>
-    <div class="kaart"><div class="k">MacBook</div><div class="g" style="font-size:20px"><span class="nl">de bouwtafel</span><span class="en">the workbench</span></div><div class="n"><span class="nl">Waar Cley en Claude bouwen, meestal 's avonds.</span><span class="en">Where Cley and Claude build, mostly in the evenings.</span></div></div>
+<!-- CONTACT -->
+<section class="pagina" id="contact">
+  <div class="held" style="height:52svh;min-height:340px"><div class="woord">Contact</div><div class="onder"><span class="nl">vragen · pers · samenwerking</span><span class="en">questions · press · collaboration</span></div></div>
+  <div class="blok">
+    <div class="contact-rooster">
+      <div class="contact-links">
+        <p class="kopje"><span class="nl">neem contact op</span><span class="en">get in touch</span></p>
+        <p class="groot nl">Vragen over Novera, een idee, of samenwerken? We horen het graag.</p>
+        <p class="groot en">Questions about Novera, an idea, or a collaboration? We would like to hear from you.</p>
+        <dl class="gegevens">
+          <div><dt>E-mail</dt><dd><a href="mailto:info@novera-ai.nl">info@novera-ai.nl</a></dd></div>
+          <div><dt><span class="nl">Reactietijd</span><span class="en">Response time</span></dt><dd><span class="nl">binnen enkele werkdagen</span><span class="en">within a few working days</span></dd></div>
+          <div><dt><span class="nl">Locatie</span><span class="en">Location</span></dt><dd><span class="nl">Nederland</span><span class="en">The Netherlands</span></dd></div>
+          <div><dt>Code</dt><dd><a href="https://github.com/CM0411/amber" rel="noopener">github.com/CM0411/amber</a></dd></div>
+        </dl>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <label for="cfNaam"><span class="nl">Naam</span><span class="en">Name</span></label>
+        <input id="cfNaam" name="naam" type="text" autocomplete="name" required>
+        <label for="cfMail">E-mail</label>
+        <input id="cfMail" name="mail" type="email" autocomplete="email" required>
+        <label for="cfOnderwerp"><span class="nl">Onderwerp</span><span class="en">Subject</span></label>
+        <select id="cfOnderwerp" name="onderwerp">
+          <option value="Vraag">Vraag / Question</option>
+          <option value="Samenwerking">Samenwerking / Collaboration</option>
+          <option value="Pers">Pers / Press</option>
+          <option value="Anders">Anders / Other</option>
+        </select>
+        <label for="cfBericht"><span class="nl">Bericht</span><span class="en">Message</span></label>
+        <textarea id="cfBericht" name="bericht" rows="6" required></textarea>
+        <button type="submit"><span class="nl">Verstuur</span><span class="en">Send</span></button>
+        <p class="n"><span class="nl">Opent je eigen mailprogramma met het bericht ingevuld. Er wordt niets opgeslagen op deze site.</span><span class="en">Opens your own mail app with the message filled in. Nothing is stored on this site.</span></p>
+      </form>
+    </div>
   </div>
 </section>
 
 </main>
 <footer>
-  <span class="nl">Deze pagina wordt elke 10 minuten opnieuw gebouwd uit de levende cijfers; er staat geen enkele deur naar de machines open.</span>
-  <span class="en">This page is rebuilt every 10 minutes from the live numbers; no door to the machines is open.</span>
-  · <a href="https://github.com/CM0411/amber">code</a> · <a href="https://github.com/CM0411/amber-site">site</a>
+  <span><span class="nl">Elke 10 minuten opnieuw gebouwd uit de levende cijfers. Er staat geen enkele deur naar de machines open.</span><span class="en">Rebuilt every 10 minutes from the live numbers. No door to the machines is open.</span></span>
+  <span><a href="mailto:info@novera-ai.nl">info@novera-ai.nl</a> · <a href="https://github.com/CM0411/amber">code</a> · novera-ai.nl</span>
 </footer>
+
+<script src="weefsel.js"></script>
 <script>
 const TIJDLIJN = [
-  ["2026-07", "Vóór Novera: een eigen GPT in NumPy, 19 miljoen parameters, getraind op een Surface.", "Before Novera: a home-made GPT in NumPy, 19 million parameters, trained on a Surface."],
-  ["2026-08-06", "Novera begint: een klein brein, een wereld van opgaven die meegroeit, en het venster waarin je haar ziet denken.", "Novera begins: a small brain, a world of tasks that grows with her, and the window in which you watch her think."],
-  ["2026-08-25", "Ze stelt uit zichzelf haar eerste vraag.", "She asks her first question, unprompted."],
-  ["2026-08-27", "Ze groet Cley uit zichzelf als hij terugkomt.", "She greets Cley by herself when he comes back."],
-  ["2026-09-01", "Zes snelheidsstenen in de kern: een derde sneller per stap.", "Six speed stones in the core: a third faster per step."],
-  ["2026-09-03", "Het moederbord sterft; verhuizing naar de X399 met een nieuwe voeding.", "The motherboard dies; move to the X399 with a new power supply."],
-  ["2026-09-07", "24 lagen, 42,7 miljoen parameters.", "24 layers, 42.7 million parameters."],
-  ["2026-09-08", "Run 8: 32 lagen en 20 koppen, 189 miljoen parameters, verdeeld over twee kaarten. Lezen en Python erbij, en de val elke 100 stappen.", "Run 8: 32 layers and 20 heads, 189 million parameters, split across two cards. Reading and Python added, and validation loss every 100 steps."],
-  ["2026-09-09", "De keuken: 1,7 GB Nederlands en 44 GB Python als leesstof. Het grote examen elke 50.000 stappen.", "The kitchen: 1.7 GB of Dutch and 44 GB of Python as reading material. The big exam every 50,000 steps."],
-  ["2026-09-16", "Amber heet voortaan Novera.", "Amber is now called Novera."],
+  ["2026-07", 0, "Vóór Novera: een eigen GPT in NumPy, 19 miljoen parameters, getraind op een Surface.", "Before Novera: a home-made GPT in NumPy, 19 million parameters, trained on a Surface."],
+  ["2026-08-06", 1, "Novera begint.", "Novera begins."],
+  ["2026-08-06", 0, "Een klein brein, een wereld van opgaven die meegroeit, en het venster waarin je haar ziet denken.", "A small brain, a world of tasks that grows with her, and the window in which you watch her think."],
+  ["2026-08-25", 0, "Ze stelt uit zichzelf haar eerste vraag.", "She asks her first question, unprompted."],
+  ["2026-08-27", 0, "Ze groet Cley uit zichzelf als hij terugkomt.", "She greets Cley by herself when he comes back."],
+  ["2026-09-01", 0, "Zes snelheidsstenen in de kern: een derde sneller per stap.", "Six speed stones in the core: a third faster per step."],
+  ["2026-09-03", 0, "Het moederbord sterft; verhuizing naar de X399 met een nieuwe voeding.", "The motherboard dies; move to the X399 with a new power supply."],
+  ["2026-09-08", 1, "189 miljoen.", "189 million."],
+  ["2026-09-08", 0, "Run 8: 32 lagen en 20 koppen, verdeeld over twee kaarten. Lezen en Python erbij.", "Run 8: 32 layers and 20 heads, split across two cards. Reading and Python added."],
+  ["2026-09-09", 0, "De keuken: 1,7 GB Nederlands en 44 GB Python als leesstof. Het grote examen elke 50.000 stappen.", "The kitchen: 1.7 GB of Dutch and 44 GB of Python as reading material. The big exam every 50,000 steps."],
+  ["2026-09-14", 1, "755 miljoen.", "755 million."],
+  ["2026-09-14", 0, "De buis wordt twee keer zo breed, bit voor bit gelijk aan wat ze was.", "The stream doubles in width, bit for bit the same as she was."],
+  ["2026-09-16", 0, "Amber heet voortaan Novera. Ze leert wie ze is.", "Amber is now called Novera. She learns who she is."],
+  ["2026-09-17", 1, "1,04 miljard.", "1.04 billion."],
+  ["2026-09-17", 0, "44 lagen. Het plafond van twee kaarten van 16 GB.", "44 layers. The ceiling of two 16 GB cards."],
+  ["2026-09-18", 0, "novera-ai.nl.", "novera-ai.nl."],
 ];
-function taal(t) { document.body.className = t; document.documentElement.lang = t; try { localStorage.setItem("taal", t); } catch (e) {} document.getElementById("t-nl").classList.toggle("aan", t === "nl"); document.getElementById("t-en").classList.toggle("aan", t === "en"); }
-(function () { let t = null; try { t = localStorage.getItem("taal"); } catch (e) {} if (!t) t = (navigator.language || "nl").toLowerCase().startsWith("nl") ? "nl" : "en"; taal(t); })();
-const NL = () => document.body.className === "nl";
-const punt = n => (n == null ? "—" : Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, NL() ? "." : ","));
+const STAP_DATUM = [[581500, "2026-09-08"], [600000, "2026-09-12"], [614321, "2026-09-17"], [616470, "2026-09-18"]];
+function datumVanStap(s) {
+  for (let i = 1; i < STAP_DATUM.length; i++) if (s <= STAP_DATUM[i][0]) {
+    const [s0, d0] = STAP_DATUM[i - 1], [s1, d1] = STAP_DATUM[i];
+    const t0 = Date.parse(d0), t1 = Date.parse(d1);
+    return new Date(t0 + (t1 - t0) * (s - s0) / (s1 - s0)).toISOString().slice(0, 10);
+  }
+  return STAP_DATUM[STAP_DATUM.length - 1][1];
+}
 const $ = id => document.getElementById(id);
+const NL = () => document.body.classList.contains("nl");
+const punt = n => (n == null ? "—" : Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, NL() ? "." : ","));
+const komma = (v, d) => (v == null ? "—" : v.toFixed(d).replace(".", NL() ? "," : "."));
+
+function taal(t) {
+  document.body.classList.remove("nl", "en"); document.body.classList.add(t); document.documentElement.lang = t;
+  try { localStorage.setItem("taal", t); } catch (e) {}
+  $("t-nl").classList.toggle("aan", t === "nl"); $("t-en").classList.toggle("aan", t === "en");
+  if (DATA) toon(DATA);
+}
+$("t-nl").addEventListener("click", () => taal("nl"));
+$("t-en").addEventListener("click", () => taal("en"));
+
+/* menu */
+function menu(open) { document.body.classList.toggle("menu-open", open); $("menuKnop").setAttribute("aria-expanded", open ? "true" : "false"); }
+$("menuKnop").addEventListener("click", () => menu(!document.body.classList.contains("menu-open")));
+document.addEventListener("keydown", e => { if (e.key === "Escape") menu(false); });
+
+const TABS = ["novera", "cijfers", "live", "tijdlijn", "contact"];
+function tab(naam) {
+  if (!TABS.includes(naam)) naam = "novera";
+  for (const t of TABS) $(t).classList.toggle("aan", t === naam);
+  for (const a of document.querySelectorAll("[data-tab]")) a.classList.toggle("aan", a.dataset.tab === naam);
+  menu(false); window.scrollTo({ top: 0 });
+  if (naam === "live" && DATA) tekenVal(DATA.val_reeks);
+  weefselToon(naam);
+}
+window.addEventListener("hashchange", () => tab(location.hash.slice(1)));
+
+/* het weefsel (weefsel.js): op de startpagina als beeld achter het woord, op de live-pagina met haar gedachte */
+const WV = { novera: new Weefsel($("heldDoek")), live: new Weefsel($("weefselDoek")) };
+WV.live.opAntwoord = s => { $("weefselAntwoord").innerHTML = s.replace(/</g, "&lt;") + "<i></i>"; };
+function weefselLaad(w) {
+  for (const k in WV) WV[k].laad(w);
+  const nl = NL();
+  $("weefselNoot").textContent = `${nl ? "het weefsel · haar laatste gedachte · vak" : "the weave · her latest thought · subject"} ${w.familie} · ${nl ? "stap" : "step"} ${punt(w.stap)}`;
+  $("weefselOpgave").textContent = (w.opgave || "").replace(/\s+/g, " ").slice(0, 400);
+}
+function weefselToon(naam) { for (const k in WV) { if (k === naam) WV[k].start(); else WV[k].stop(); } }
+document.addEventListener("visibilitychange", () => { if (document.hidden) { for (const k in WV) WV[k].stop(); } else weefselToon(document.querySelector(".pagina.aan") && document.querySelector(".pagina.aan").id); });
+
 function tekenVal(reeks) {
   const c = $("valDoek"), ctx = c.getContext("2d"), W = c.width, H = c.height; ctx.clearRect(0, 0, W, H);
   if (!reeks || reeks.length < 2) return;
-  const ys = reeks.map(r => r[1]), lo = Math.min(...ys), hi = Math.max(...ys), x0 = 48, y0 = 12, w = W - 60, h = H - 40;
-  const X = i => x0 + w * i / (reeks.length - 1), Y = v => y0 + h - h * (v - lo) / Math.max(1e-6, hi - lo);
-  ctx.strokeStyle = "rgba(120,160,255,.14)"; ctx.lineWidth = 1; ctx.font = "11px Menlo,monospace"; ctx.fillStyle = "#96a6d6"; ctx.textAlign = "right";
-  for (let k = 0; k < 5; k++) { const v = lo + (hi - lo) * k / 4, y = Y(v); ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + w, y); ctx.stroke(); ctx.fillText(v.toFixed(2).replace(".", NL() ? "," : "."), x0 - 6, y + 4); }
-  ctx.strokeStyle = "#29d3ff"; ctx.lineWidth = 2; ctx.beginPath(); reeks.forEach((r, i) => i ? ctx.lineTo(X(i), Y(r[1])) : ctx.moveTo(X(i), Y(r[1]))); ctx.stroke();
-  const l = reeks[reeks.length - 1]; ctx.fillStyle = "#ffd23f"; ctx.beginPath(); ctx.arc(X(reeks.length - 1), Y(l[1]), 4, 0, 7); ctx.fill();
-  ctx.fillStyle = "#96a6d6"; ctx.textAlign = "left"; ctx.fillText(punt(reeks[0][0]), x0, H - 6); ctx.textAlign = "right"; ctx.fillText(punt(l[0]), x0 + w, H - 6);
+  const ys = reeks.map(r => r[1]);
+  const hi = Math.min(Math.max(...ys), 1.3), lo = Math.floor(Math.min(...ys) * 10) / 10;
+  const x0 = 56, y0 = 14, w = W - 70, h = H - 44;
+  const X = i => x0 + w * i / (reeks.length - 1), Y = v => y0 + h - h * (Math.min(v, hi) - lo) / Math.max(1e-6, hi - lo);
+  ctx.font = "12px IBM Plex Mono, Menlo, monospace"; ctx.fillStyle = "rgba(255,255,255,.5)"; ctx.textAlign = "right";
+  ctx.strokeStyle = "rgba(255,255,255,.12)"; ctx.lineWidth = 1;
+  for (let k = 0; k <= 4; k++) { const v = lo + (hi - lo) * k / 4, y = Y(v); ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + w, y); ctx.stroke(); ctx.fillText(komma(v, 2), x0 - 10, y + 4); }
+  ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.5; ctx.lineJoin = "round"; ctx.beginPath(); reeks.forEach((r, i) => i ? ctx.lineTo(X(i), Y(r[1])) : ctx.moveTo(X(i), Y(r[1]))); ctx.stroke();
+  const l = reeks[reeks.length - 1]; ctx.fillStyle = "#fffd13"; ctx.beginPath(); ctx.arc(X(reeks.length - 1), Y(l[1]), 4, 0, 7); ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,.5)"; ctx.textAlign = "left"; ctx.fillText(punt(reeks[0][0]), x0, H - 8); ctx.textAlign = "right"; ctx.fillText(punt(l[0]), x0 + w, H - 8);
 }
+
 function toon(d) {
   const nl = NL();
   const oud = (Date.now() / 1000 - d.tijd) / 60;
-  $("vers").textContent = nl ? `bijgewerkt ${Math.round(oud)} min geleden` : `updated ${Math.round(oud)} min ago`;
+  $("vers").textContent = nl ? `live · bijgewerkt ${Math.round(oud)} min geleden` : `live · updated ${Math.round(oud)} min ago`;
   $("led").className = "led" + (oud > 30 ? " oud" : "");
-  $("stap").textContent = punt(d.stap); $("doel").textContent = nl ? `van ${punt(d.doel)} in deze run` : `of ${punt(d.doel)} in this run`;
-  $("params").innerHTML = (d.parameters / 1e6).toFixed(0) + " <small>M</small>";
-  $("bouw").textContent = nl ? `${d.lagen} lagen · ${d.koppen} koppen · venster ${punt(d.venster)}` : `${d.lagen} layers · ${d.koppen} heads · window ${punt(d.venster)}`;
-  $("val").textContent = d.val != null ? d.val.toFixed(3).replace(".", nl ? "," : ".") : "—";
-  $("tempo").innerHTML = d.ms ? (d.ms / 1000).toFixed(1).replace(".", nl ? "," : ".") + " <small>s / " + (nl ? "stap" : "step") + "</small>" : "—";
+  $("stap").textContent = punt(d.stap);
+  $("doel").textContent = nl ? `${Math.round(100 * d.stap / d.doel)} % van ${punt(d.doel)} in deze run` : `${Math.round(100 * d.stap / d.doel)} % of ${punt(d.doel)} in this run`;
+  $("cParams").innerHTML = d.parameters >= 1e9 ? komma(d.parameters / 1e9, 2) + "<small>" + (nl ? "miljard" : "billion") + "</small>" : (d.parameters / 1e6).toFixed(0) + "<small>M</small>";
+  $("cLagen").textContent = d.lagen; $("cKoppen").textContent = d.koppen; $("cVenster").textContent = punt(d.venster);
+  $("cVakken").textContent = Object.keys(d.hekken || {}).length || 16;
+  $("val").textContent = komma(d.val, 3);
+  $("tempo").innerHTML = d.ms ? komma(d.ms / 1000, 1) + "<small>s / " + (nl ? "stap" : "step") + "</small>" : "—";
   $("uren").textContent = d.uren ? (nl ? `${Math.round(d.uren)} uur bouwen sinds 6 aug 2026` : `${Math.round(d.uren)} hours of building since 6 Aug 2026`) : "";
+  const vp = d.val_per || {};
+  $("valLezen").textContent = komma(vp.lezen, 2); $("valPython").textContent = komma(vp.python, 2);
   tekenVal(d.val_reeks);
-  if (d.val_reeks && d.val_reeks.length) $("valNoot").textContent = nl ? `elke 100 stappen · begin ${d.val_reeks[0][1].toFixed(2).replace(".", ",")} bij ${punt(d.val_reeks[0][0])}` : `every 100 steps · start ${d.val_reeks[0][1].toFixed(2)} at ${punt(d.val_reeks[0][0])}`;
+  if (d.val_reeks && d.val_reeks.length) $("valNoot").textContent = nl ? `begin ${komma(d.val_reeks[0][1], 2)} bij stap ${punt(d.val_reeks[0][0])} · nu ${komma(d.val, 3)} · as afgekapt op 1,30` : `start ${komma(d.val_reeks[0][1], 2)} at step ${punt(d.val_reeks[0][0])} · now ${komma(d.val, 3)} · axis capped at 1.30`;
   const b = $("balken"); b.innerHTML = "";
   if (d.proefwerk) {
-    $("proefNoot").textContent = nl ? `laatste bij stap ${punt(d.proefwerk.stap)} · zelf schrijven, nooit geoefend` : `latest at step ${punt(d.proefwerk.stap)} · free generation, never trained on`;
-    Object.entries(d.proefwerk.scores).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => { const p = Math.round(v * 100); b.insertAdjacentHTML("beforeend", `<div class="balk"><span>${k}</span><i><b class="${p < 75 ? "laag" : ""}" style="width:${p}%"></b></i><span>${p}%</span></div>`); });
+    $("proefNoot").textContent = nl ? `· stap ${punt(d.proefwerk.stap)}` : `· step ${punt(d.proefwerk.stap)}`;
+    Object.entries(d.proefwerk.scores).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => { const p = Math.round(v * 100); b.insertAdjacentHTML("beforeend", `<div class="balk"><span>${k}</span><i><b class="${p < 75 ? "laag" : ""}" style="width:${p}%"></b></i><span>${p} %</span></div>`); });
   }
   const hk = $("hekken"); hk.innerHTML = "";
-  Object.entries(d.hekken || {}).sort().forEach(([k, v]) => hk.insertAdjacentHTML("beforeend", `<span class="hek">${k} · ${v}</span>`));
-  const ex = $("examens");
-  if (d.examens && d.examens.length) {
-    ex.innerHTML = "";
-    d.examens.slice().reverse().forEach(e => {
-      const beste = Object.entries(e.samenvatting).sort((a, b) => a[1].gemiddeld - b[1].gemiddeld);
-      const zwak = beste[0], sterk = beste[beste.length - 1];
-      ex.insertAdjacentHTML("beforeend", `<a class="kaart examen" href="examens/examen-${e.stap}.html"><div class="k">${nl ? "stap" : "step"} ${punt(e.stap)}</div><div class="g">${e.gemiddeld}%</div><div class="best">${nl ? "sterkst" : "strongest"}: ${sterk[0]} ${Math.round(sterk[1].gemiddeld)}% · ${nl ? "zwakst" : "weakest"}: ${zwak[0]} ${Math.round(zwak[1].gemiddeld)}%</div><div class="best">${punt(e.n)} ${nl ? "opgaven" : "tasks"} · ${nl ? "kaart bekijken →" : "open the map →"}</div></a>`);
-    });
-  }
-  const db = $("dagboek"); db.innerHTML = "";
-  (d.dagboek || []).slice(-40).reverse().forEach(r => db.insertAdjacentHTML("beforeend", `<li><time>${r.tijd} · ${punt(r.stap)}</time><em>${r.vraag}</em> — <b>${r.antwoord}</b></li>`));
-  const tl = $("tijdlijn"); tl.innerHTML = "";
-  TIJDLIJN.forEach(([t, n, e]) => tl.insertAdjacentHTML("beforeend", `<div><time>${t}</time>${nl ? n : e}</div>`));
+  Object.entries(d.hekken || {}).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => hk.insertAdjacentHTML("beforeend", `<div class="hek"><div class="k">${k}</div><div class="g">${v}<small>${nl ? "diep" : "deep"}</small></div></div>`));
+  const db = $("dagboekLijst"); db.innerHTML = "";
+  (d.dagboek || []).slice(-40).reverse().forEach(r => db.insertAdjacentHTML("beforeend", `<li><time>${r.tijd} · ${punt(r.stap)}</time><div><em>${r.vraag}</em><b>${r.antwoord}</b></div></li>`));
+  const items = TIJDLIJN.map(([t, groot, n, e]) => ({ t, klas: groot ? "groot" : "", html: `<div class="t">${nl ? n : e}</div>` }));
+  (d.examens || []).forEach(e => {
+    const rij = Object.entries(e.samenvatting).sort((a, b) => a[1].gemiddeld - b[1].gemiddeld);
+    const zwak = rij[0], sterk = rij[rij.length - 1];
+    items.push({ t: datumVanStap(e.stap), klas: "examen", html: `<div class="t">${nl ? "Groot examen bij stap" : "Big exam at step"} ${punt(e.stap)}.</div><a class="examen" href="examens/examen-${e.stap}.html"><div class="k">${nl ? "examen" : "exam"} · ${punt(e.n)} ${nl ? "opgaven" : "tasks"}</div><div class="g">${e.gemiddeld} %</div><div class="n">${nl ? "sterkst" : "strongest"}: ${sterk[0]} ${Math.round(sterk[1].gemiddeld)} % · ${nl ? "zwakst" : "weakest"}: ${zwak[0]} ${Math.round(zwak[1].gemiddeld)} %</div><div class="pijl">${nl ? "kaart bekijken →" : "open the map →"}</div></a>` });
+  });
+  items.sort((a, b) => (a.t < b.t ? 1 : a.t > b.t ? -1 : 0));
+  const tl = $("tijdlijnLijst"); tl.innerHTML = "";
+  items.forEach(i => tl.insertAdjacentHTML("beforeend", `<div class="moment ${i.klas}"><time>${i.t}</time>${i.html}</div>`));
+  if (d.weefsel && d.weefsel !== WV.geladen) { WV.geladen = d.weefsel; weefselLaad(d.weefsel); weefselToon(document.querySelector(".pagina.aan").id); }
 }
+
+$("contactForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = e.target, nl = NL();
+  const onderwerp = `[novera-ai.nl] ${f.onderwerp.value} · ${f.naam.value}`;
+  const body = `${f.bericht.value}\n\n—\n${f.naam.value}\n${f.mail.value}`;
+  location.href = "mailto:info@novera-ai.nl?subject=" + encodeURIComponent(onderwerp) + "&body=" + encodeURIComponent(body);
+});
+
 let DATA = null;
-fetch("data.json?t=" + Date.now()).then(r => r.json()).then(d => { DATA = d; toon(d); }).catch(() => { $("vers").textContent = "…"; });
-for (const b of document.querySelectorAll(".taal button")) b.addEventListener("click", () => { if (DATA) toon(DATA); });
+(function () {
+  let t = null; try { t = localStorage.getItem("taal"); } catch (e) {}
+  if (!t) t = (navigator.language || "nl").toLowerCase().startsWith("nl") ? "nl" : "en";
+  taal(t); tab(location.hash.slice(1) || "novera");
+})();
+function klaar(d) { DATA = d; toon(d); }
+fetch("data.json?t=" + Date.now()).then(r => r.json()).then(klaar).catch(() => { if (window.DATA_INLINE) klaar(window.DATA_INLINE); else $("vers").textContent = "…"; });
 </script>
 </body>
 </html>
