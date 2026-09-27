@@ -183,11 +183,27 @@ footer a{color:var(--dof)}
     <canvas id="heldDoek"></canvas>
     <div class="schaduw"></div>
     <div class="woord">Novera</div>
-    <div class="onder"><span class="nl">een brein dat elke dag leert · 1 miljard parameters · thuis</span><span class="en">a brain that learns every day · one billion parameters · at home</span></div>
+    <div class="onder"><span class="nl">een brein dat elke dag leert · thuis · Small Novera leert nu, Large (1 miljard) staat geparkeerd</span><span class="en">a brain that learns every day · at home · Small Novera is learning now, Large (one billion) is parked</span></div>
   </div>
   <div class="blok smal tekst">
-    <p class="groot nl">Novera is een taalmodel van één miljard parameters. Zelf gebouwd, van nul. Ze leert nog elke dag, op hardware die thuis staat.</p>
-    <p class="groot en">Novera is a language model of one billion parameters. Built from zero. She still learns every day, on hardware that lives at home.</p>
+    <p class="groot nl">Novera is een taalmodel dat thuis wordt gebouwd, van nul. Het grote brein, Large, heeft 1,04 miljard parameters en staat geparkeerd. Het kleine, Small Novera, leert nu: 47 miljoen parameters op één kaart.</p>
+    <p class="groot en">Novera is a language model built at home, from zero. The big brain, Large, has 1.04 billion parameters and is parked. The small one, Small Novera, is learning now: 47 million parameters on a single card.</p>
+
+    <h3 class="nl">Wat er gebeurde · september 2026</h3><h3 class="en">What happened · September 2026</h3>
+    <p class="nl">Op 23 september is het grote brein, Large, geparkeerd bij stap 629.581. Het zat aan het plafond van twee kaarten van 16 GB. We wilden eerst begrijpen wat een klein brein op één kaart kan.</p>
+    <p class="en">On 23 September the big brain, Large, was parked at step 629,581. It had hit the ceiling of two 16 GB cards. We first wanted to understand what a small brain on one card can do.</p>
+    <p class="nl">Dat kleine brein ging op 26 september kapot. Stil, zonder foutmelding: het proefwerk zakte van 92 naar 0 procent. We zetten een kopie van 30.000 stappen eerder terug. Een nacht later gebeurde hetzelfde nog een keer, op precies dezelfde stap.</p>
+    <p class="en">That small brain broke on 26 September. Silently, without an error: the test dropped from 92 to 0 percent. We restored a copy from 30,000 steps earlier. One night later the same thing happened again, at exactly the same step.</p>
+    <p class="nl">De oorzaak vonden we op 27 september. Elk blok van het brein heeft twee kranen die bepalen hoeveel het blok bijdraagt. Ze begonnen op nul en werden elke stap een beetje naar nul teruggetrokken. Drieëntwintig van de vierentwintig bleven dicht. Het brein werkte al die tijd op één laag. Zo'n brein is breekbaar: één nieuwe les kan het oude wissen. Dat was een ontwerpfout van ons.</p>
+    <p class="en">We found the cause on 27 September. Every block of the brain has two gates that decide how much the block contributes. They started at zero and were pulled a little back towards zero every step. Twenty-three of the twenty-four stayed shut. The brain had been working on a single layer all along. Such a brain is brittle: one new lesson can wipe out the old. That was a design mistake on our side.</p>
+
+    <h3 class="nl">Waar we nu mee bezig zijn</h3><h3 class="en">What we are working on now</h3>
+    <p class="nl">Sinds 27 september leert Small Novera: acht lagen, twintig koppen, 47 miljoen parameters, in de laagvorm waarmee Novera in augustus begon. De kranen staan open en worden niet meer teruggetrokken. Ze oefent eerst drie vakken: puzzels, rekenen en code. Het eerste doel is 100.000 stappen. Daarna kijken we wat ze wil en wat ze nodig heeft.</p>
+    <p class="en">Since 27 September Small Novera has been learning: eight layers, twenty heads, 47 million parameters, in the layer shape Novera started with in August. The gates are open and are no longer pulled back. She practises three subjects first: puzzles, arithmetic and code. The first goal is 100,000 steps. After that we look at what she wants and what she needs.</p>
+    <p class="nl">Er waakt nu een nachtwacht. Elke 5.000 stappen maakt hij een volledige kopie en keurt die met een los proefwerk voordat hij naar de opslag mag. Zakt een proefwerk zwaar, dan volgen twee losse proefwerken. Is de breuk bevestigd, dan zet de wacht de training zelf op pauze en vertelt hij ons waarom.</p>
+    <p class="en">A night watch is on duty now. Every 5,000 steps it makes a full copy and checks it with a separate test before it may go to storage. If a test drops hard, two separate tests follow. If the break is confirmed, the watch pauses the training by itself and tells us why.</p>
+    <p class="nl">Large staat klaar bij 629.581 en gaat verder zodra Small ons genoeg geleerd heeft.</p>
+    <p class="en">Large is waiting at 629,581 and continues once Small has taught us enough.</p>
 
     <h3 class="nl">Wat Novera is</h3><h3 class="en">What Novera is</h3>
     <p class="nl">Novera is geen kopie van een bestaand model. Het is ook geen fine-tune. Het brein is zelf gebouwd. De leerstof is zelf samengesteld. De opgaven, de metingen en het venster waarin je haar ziet denken zijn ook zelf gebouwd. Ze draait op twee Tesla P100-kaarten uit 2016. Die twee kaarten rekenen samen één brein. Er is geen cloud. Er is geen geld van buiten. Er is geen team. Er is één bouwer, een assistent en een kamer in Nederland.</p>
@@ -231,15 +247,15 @@ footer a{color:var(--dof)}
       <div class="getal"><div class="k"><span class="nl">lagen</span><span class="en">layers</span></div><div class="g" id="cLagen">—</div></div>
       <div class="getal"><div class="k"><span class="nl">koppen</span><span class="en">heads</span></div><div class="g" id="cKoppen">—</div></div>
       <div class="getal"><div class="k"><span class="nl">venster</span><span class="en">window</span></div><div class="g" id="cVenster">—</div><div class="n"><span class="nl">tekens tegelijk</span><span class="en">characters at once</span></div></div>
-      <div class="getal"><div class="k"><span class="nl">breedte</span><span class="en">width</span></div><div class="g">768</div><div class="n"><span class="nl">kanalen per laag</span><span class="en">channels per layer</span></div></div>
-      <div class="getal"><div class="k"><span class="nl">vakken</span><span class="en">subjects</span></div><div class="g" id="cVakken">16</div></div>
+      <div class="getal"><div class="k"><span class="nl">breedte</span><span class="en">width</span></div><div class="g" id="cBreedte">768</div><div class="n"><span class="nl">kanalen per laag</span><span class="en">channels per layer</span></div></div>
+      <div class="getal"><div class="k"><span class="nl">vakken</span><span class="en">subjects</span></div><div class="g" id="cVakken">3</div><div class="n"><span class="nl">nu: puzzels, rekenen, code</span><span class="en">now: puzzles, arithmetic, code</span></div></div>
     </div>
   </div>
   <div class="blok" style="padding-top:0">
     <p class="kopje"><span class="nl">hoe ze gemeten wordt</span><span class="en">how she is measured</span></p>
     <div class="getallen">
       <div class="getal"><div class="k"><span class="nl">de val</span><span class="en">validation</span></div><div class="g">250<small><span class="nl">stappen</span><span class="en">steps</span></small></div><div class="n"><span class="nl">vaste opgaven, nooit geoefend</span><span class="en">fixed tasks, never trained on</span></div></div>
-      <div class="getal"><div class="k"><span class="nl">proefwerk</span><span class="en">test</span></div><div class="g">1.000<small><span class="nl">stappen</span><span class="en">steps</span></small></div><div class="n"><span class="nl">zelf schrijven, per vak</span><span class="en">free writing, per subject</span></div></div>
+      <div class="getal"><div class="k"><span class="nl">proefwerk</span><span class="en">test</span></div><div class="g" id="cProefElke">5.000<small><span class="nl">stappen</span><span class="en">steps</span></small></div><div class="n"><span class="nl">zelf schrijven, per vak</span><span class="en">free writing, per subject</span></div></div>
       <div class="getal"><div class="k"><span class="nl">groot examen</span><span class="en">big exam</span></div><div class="g">50.000<small><span class="nl">stappen</span><span class="en">steps</span></small></div><div class="n"><span class="nl">± 1.000 opgaven per vak</span><span class="en">± 1,000 tasks per subject</span></div></div>
       <div class="getal"><div class="k"><span class="nl">momentopname</span><span class="en">snapshot</span></div><div class="g">100<small><span class="nl">stappen</span><span class="en">steps</span></small></div><div class="n"><span class="nl">13 GB, alles wat ze weet</span><span class="en">13 GB, everything she knows</span></div></div>
     </div>
@@ -256,8 +272,7 @@ footer a{color:var(--dof)}
   <div class="blok" style="padding-top:0">
     <p class="kopje">machines</p>
     <div class="machines">
-      <div class="machine"><div class="k">X399 · <span class="nl">de leerbank</span><span class="en">the learning bench</span></div><div class="g">2× Tesla P100</div><div class="n"><span class="nl">Novera leert hier: één brein, verdeeld over twee kaarten. Een RTX 3070 Ti ernaast beantwoordt de peilvragen en neemt de proefwerken af.</span><span class="en">Novera learns here: one brain, split across two cards. An RTX 3070 Ti next to it answers the probe questions and runs the tests.</span></div></div>
-      <div class="machine"><div class="k">DL360 · <span class="nl">de stille server</span><span class="en">the quiet server</span></div><div class="g">288 GB</div><div class="n"><span class="nl">Maakt haar leesstof klaar, bewaart de back-ups, laat haar denken in het venster en bouwt deze site elke 10 minuten.</span><span class="en">Prepares her reading material, keeps the backups, runs the thinking window and rebuilds this site every 10 minutes.</span></div></div>
+      <div class="machine"><div class="k">X399 · <span class="nl">de leerbank</span><span class="en">the learning bench</span></div><div class="g">RTX 3070 Ti</div><div class="n"><span class="nl">Small Novera leert hier. Twee Tesla P100's keuren de kopieën en wachten op Large.</span><span class="en">Small Novera learns here. Two Tesla P100s check the copies and wait for Large.</span></div></div>
       <div class="machine"><div class="k">NAS · <span class="nl">het geheugen</span><span class="en">the memory</span></div><div class="g">192 GB</div><div class="n"><span class="nl">Opslag, grafieken van temperatuur en val, meldingen naar de telefoon.</span><span class="en">Storage, graphs of temperature and loss, notifications to the phone.</span></div></div>
       <div class="machine"><div class="k">MacBook · <span class="nl">de bouwtafel</span><span class="en">the workbench</span></div><div class="g"><span class="nl">Cley en Claude</span><span class="en">Cley and Claude</span></div><div class="n"><span class="nl">Waar gebouwd wordt, meestal 's avonds. Eind 2026 verhuist Novera naar een EPYC-bord met ruimte voor meer kaarten.</span><span class="en">Where the building happens, mostly in the evenings. Late 2026 Novera moves to an EPYC board with room for more cards.</span></div></div>
     </div>
@@ -369,6 +384,11 @@ const TIJDLIJN = [
   ["2026-09-17", 1, "1,04 miljard.", "1.04 billion."],
   ["2026-09-17", 0, "44 lagen. Het plafond van twee kaarten van 16 GB.", "44 layers. The ceiling of two 16 GB cards."],
   ["2026-09-18", 0, "novera-ai.nl.", "novera-ai.nl."],
+  ["2026-09-23", 0, "Large geparkeerd bij 629.581. Small: een klein brein op één kaart, om te begrijpen wat dat kan.", "Large parked at 629,581. Small: a small brain on one card, to understand what it can do."],
+  ["2026-09-26", 0, "Small gaat stil kapot bij 55.000. Teruggezet, en de nachtwacht gebouwd: gekeurde kopieën, twee proefwerken, pauze bij een breuk.", "Small breaks silently at 55,000. Restored, and the night watch built: checked copies, two tests, pause on a break."],
+  ["2026-09-27", 0, "De oorzaak: 23 van de 24 kranen dicht, een brein van één laag. Een ontwerpfout van ons.", "The cause: 23 of the 24 gates shut, a one-layer brain. A design mistake on our side."],
+  ["2026-09-27", 1, "Small Novera.", "Small Novera."],
+  ["2026-09-27", 0, "Acht lagen, twintig koppen, 47 miljoen. Kranen open, drie vakken: puzzels, rekenen, code. Doel: 100.000 stappen.", "Eight layers, twenty heads, 47 million. Gates open, three subjects: puzzles, arithmetic, code. Goal: 100,000 steps."],
 ];
 const STAP_DATUM = [[581500, "2026-09-08"], [600000, "2026-09-12"], [614321, "2026-09-17"], [616470, "2026-09-18"]];
 function datumVanStap(s) {
@@ -425,7 +445,8 @@ function tekenVal(reeks) {
   const c = $("valDoek"), ctx = c.getContext("2d"), W = c.width, H = c.height; ctx.clearRect(0, 0, W, H);
   if (!reeks || reeks.length < 2) return;
   const ys = reeks.map(r => r[1]);
-  const hi = Math.min(Math.max(...ys), 1.3), lo = Math.floor(Math.min(...ys) * 10) / 10;
+  const plafond = Math.max(...ys) > 3 ? 6 : 1.3;   // een jong brein begint boven de 5; Large zat onder 1,3
+  const hi = Math.min(Math.max(...ys), plafond), lo = Math.floor(Math.min(...ys) * 10) / 10;
   const x0 = 56, y0 = 14, w = W - 70, h = H - 44;
   const X = i => x0 + w * i / (reeks.length - 1), Y = v => y0 + h - h * (Math.min(v, hi) - lo) / Math.max(1e-6, hi - lo);
   ctx.font = "12px IBM Plex Mono, Menlo, monospace"; ctx.fillStyle = "rgba(255,255,255,.5)"; ctx.textAlign = "right";
@@ -445,14 +466,16 @@ function toon(d) {
   $("doel").textContent = nl ? `${Math.round(100 * d.stap / d.doel)} % van ${punt(d.doel)} in deze run` : `${Math.round(100 * d.stap / d.doel)} % of ${punt(d.doel)} in this run`;
   $("cParams").innerHTML = d.parameters >= 1e9 ? komma(d.parameters / 1e9, 2) + "<small>" + (nl ? "miljard" : "billion") + "</small>" : (d.parameters / 1e6).toFixed(0) + "<small>M</small>";
   $("cLagen").textContent = d.lagen; $("cKoppen").textContent = d.koppen; $("cVenster").textContent = punt(d.venster);
-  $("cVakken").textContent = Object.keys(d.hekken || {}).length || 16;
+  $("cVakken").textContent = d.vakken ? d.vakken.length : (Object.keys(d.hekken || {}).length || 16);
+  if (d.breedte) $("cBreedte").textContent = punt(d.breedte);
+  if (d.proefwerk_elke) $("cProefElke").innerHTML = punt(d.proefwerk_elke) + "<small>" + (nl ? "stappen" : "steps") + "</small>";
   $("val").textContent = komma(d.val, 3);
   $("tempo").innerHTML = d.ms ? komma(d.ms / 1000, 1) + "<small>s / " + (nl ? "stap" : "step") + "</small>" : "—";
-  $("uren").textContent = d.uren ? (nl ? `${Math.round(d.uren)} uur bouwen sinds 6 aug 2026` : `${Math.round(d.uren)} hours of building since 6 Aug 2026`) : "";
+  $("uren").textContent = d.run_uren !== undefined ? (nl ? `zij leerde ${komma(d.run_uren, 1)} uur in deze run · ${Math.round(d.uren || 0)} uur bouwen sinds 6 aug 2026` : `she learned ${komma(d.run_uren, 1)} hours in this run · ${Math.round(d.uren || 0)} hours of building since 6 Aug 2026`) : (d.uren ? (nl ? `${Math.round(d.uren)} uur bouwen sinds 6 aug 2026` : `${Math.round(d.uren)} hours of building since 6 Aug 2026`) : "");
   const vp = d.val_per || {};
   $("valLezen").textContent = komma(vp.lezen, 2); $("valPython").textContent = komma(vp.python, 2);
   tekenVal(d.val_reeks);
-  if (d.val_reeks && d.val_reeks.length) $("valNoot").textContent = nl ? `begin ${komma(d.val_reeks[0][1], 2)} bij stap ${punt(d.val_reeks[0][0])} · nu ${komma(d.val, 3)} · as afgekapt op 1,30` : `start ${komma(d.val_reeks[0][1], 2)} at step ${punt(d.val_reeks[0][0])} · now ${komma(d.val, 3)} · axis capped at 1.30`;
+  if (d.val_reeks && d.val_reeks.length) $("valNoot").textContent = nl ? `begin ${komma(d.val_reeks[0][1], 2)} bij stap ${punt(d.val_reeks[0][0])} · nu ${komma(d.val, 3)} ` + (d.vakken ? ` · over haar ${d.vakken.length} vakken` : "") : `start ${komma(d.val_reeks[0][1], 2)} at step ${punt(d.val_reeks[0][0])} · now ${komma(d.val, 3)}` + (d.vakken ? ` · over her ${d.vakken.length} subjects` : "");
   const b = $("balken"); b.innerHTML = "";
   if (d.proefwerk) {
     $("proefNoot").textContent = nl ? `· stap ${punt(d.proefwerk.stap)}` : `· step ${punt(d.proefwerk.stap)}`;
