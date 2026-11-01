@@ -577,7 +577,10 @@ function toon(d) {
   if (d.proefwerk_elke) $("cProefElke").innerHTML = punt(d.proefwerk_elke) + "<small>" + (nl ? "stappen" : "steps") + "</small>";
   $("val").textContent = komma(d.val, 3);
   $("tempo").innerHTML = d.ms ? komma(d.ms / 1000, 1) + "<small>s / " + (nl ? "stap" : "step") + "</small>" : "—";
-  $("uren").textContent = d.run_uren !== undefined ? (nl ? `zij leerde ${komma(d.run_uren, 1)} uur in deze run ${d.uren ? ` · ${Math.round(d.uren)} uur bouwen sinds 6 aug 2026` : ""}` : `she learned ${komma(d.run_uren, 1)} hours in this run ${d.uren ? ` · ${Math.round(d.uren)} hours of building since 6 Aug 2026` : ""}`) : (d.uren ? (nl ? `${Math.round(d.uren)} uur bouwen sinds 6 aug 2026` : `${Math.round(d.uren)} hours of building since 6 Aug 2026`) : "");
+  // 1 nov 2026 (Cley): "samen gebouwd" = het hele project sinds 6 aug (totaal_uren); d.uren is sinds XXXII alleen de XXXII-tijd
+  { const leerde = d.run_uren !== undefined ? (nl ? `zij leerde ${komma(d.run_uren, 1)} uur in deze run` : `she learned ${komma(d.run_uren, 1)} hours in this run`) : "";
+    const samen = d.totaal_uren != null ? (nl ? `${komma(d.totaal_uren, 1)} uur samen gebouwd sinds 6 aug 2026` : `${komma(d.totaal_uren, 1)} hours built together since 6 Aug 2026`) : "";
+    $("uren").textContent = [leerde, samen].filter(Boolean).join(" · "); }
   const vp = d.val_per || {};
   $("valLezen").textContent = komma(vp.lezen, 2); $("valPython").textContent = komma(vp.python, 2);
   tekenVal(d.val_reeks);
