@@ -1,0 +1,16 @@
+:root{--zwart:#000;--ink:#fff;--dof:rgba(255,255,255,.62);--lijn:rgba(255,255,255,.14);--geel:#fffd13;
+  --sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+*{box-sizing:border-box}
+html,body{background:var(--zwart);color:var(--ink)}
+body{margin:0;font:16px/1.7 var(--sans);font-weight:300;-webkit-font-smoothing:antialiased}
+main{max-width:680px;margin:0 auto;padding:56px max(20px,env(safe-area-inset-right)) 80px max(20px,env(safe-area-inset-left))}
+.logo{font:600 13px var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink);text-decoration:none}
+h1{font-weight:200;font-size:clamp(34px,8vw,52px);line-height:1.1;margin:40px 0 8px;text-wrap:balance}
+h2{font-weight:500;font-size:19px;margin:40px 0 8px}
+p,li{color:var(--dof)} strong{color:var(--ink);font-weight:500}
+ul{padding-left:20px} li{margin:6px 0}
+a{color:var(--geel)} .datum{font-size:14px;color:var(--dof)}
+.taal{display:flex;gap:16px;margin-top:28px;font-size:14px}
+.taal a{color:var(--dof);text-decoration:none}.taal a.aan{color:var(--ink)}
+hr{border:0;border-top:1px solid var(--lijn);margin:56px 0}
+.mail{font-family:"SF Mono",Menlo,Consolas,monospace;color:var(--ink);user-select:all}
