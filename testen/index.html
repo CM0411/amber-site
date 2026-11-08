@@ -34,6 +34,11 @@ button[disabled]{opacity:.55;cursor:default}
 .melding.fout{background:rgba(255,80,80,.10);border:1px solid rgba(255,90,90,.55)}
 .melding.fout p{color:#ffd2d2}
 .klein{font-size:14px}
+.fotos{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 14px;margin:0 -2px}
+.fotos figure{margin:0;flex:none;scroll-snap-align:start;width:min(62vw,230px)}
+.fotos figure.breed{width:min(86vw,460px)}
+.fotos img{width:100%;height:auto;border-radius:16px;border:1px solid var(--lijn);display:block}
+.fotos figcaption{font-size:14px;color:var(--dof);margin-top:6px;line-height:1.4}
 @media (prefers-reduced-motion:no-preference){button{transition:transform .1s}button:active{transform:scale(.98)}}
 </style>
 </head>
@@ -52,6 +57,17 @@ button[disabled]{opacity:.55;cursor:default}
 <li>Werkt in <strong>CarPlay</strong> en op je <strong>Apple Watch</strong>.</li>
 <li>Novera, een <strong>eigen AI</strong>, denkt mee over de beste route.</li>
 </ul>
+
+<h2 id="fotos">Zo ziet het eruit</h2>
+<div class="fotos" role="list" aria-label="Schermafbeeldingen van Novera Route">
+  <figure role="listitem"><img src="fotos/2-novera-advies.jpg" width="414" height="900" loading="lazy" alt="Drie routes met de reistijd, de kans op vertraging en het advies van Novera"><figcaption>3 routes, de kans op file en het advies van Novera</figcaption></figure>
+  <figure role="listitem"><img src="fotos/3-flitspaal.jpg" width="414" height="900" loading="lazy" alt="Melding bovenin: flitspaal over 150 meter, 50 km/u"><figcaption>Een melding voor een flitspaal, ook zonder route</figcaption></figure>
+  <figure role="listitem"><img src="fotos/7a-paneel-open.jpg" width="414" height="900" loading="lazy" alt="De kaart met het zoekpaneel open"><figcaption>Zoeken, met je teller en parkeerplek</figcaption></figure>
+  <figure role="listitem"><img src="fotos/7b-paneel-dicht.jpg" width="414" height="900" loading="lazy" alt="De kaart met het zoekpaneel omlaag geveegd, alleen het zoekveld"><figcaption>Veeg het paneel omlaag voor meer kaart</figcaption></figure>
+  <figure role="listitem" class="breed"><img src="fotos/5-carplay-kaart.jpg" width="900" height="337" loading="lazy" alt="CarPlay: de kaart met je snelheid linksonder en een flitspaal op de kaart"><figcaption>CarPlay: je snelheid en flitspalen op de kaart</figcaption></figure>
+  <figure role="listitem" class="breed"><img src="fotos/6-carplay-traject.jpg" width="900" height="337" loading="lazy" alt="CarPlay: melding van een trajectcontrole met je gemiddelde snelheid"><figcaption>CarPlay: je gemiddelde snelheid bij een trajectcontrole</figcaption></figure>
+</div>
+<p class="klein">Veeg opzij voor meer.</p>
 
 <h2>Wat je nodig hebt</h2>
 <ul>
