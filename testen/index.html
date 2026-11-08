@@ -1,0 +1,188 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Test Novera Route</title>
+<meta name="description" content="Meld je aan om Novera Route te testen: een route-app voor iPhone, Apple Watch en CarPlay die file probeert te vermijden. Zonder Google, zonder reclame.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="Test Novera Route">
+<meta property="og:description" content="Een zelfgebouwde route-app zonder Google en zonder reclame. Meld je aan als tester.">
+<link rel="stylesheet" href="../route/stijl.css">
+<style>
+/* 8 nov 2026: aanmeldpagina voor de test van Route Beta (Cley, TikTok-oproep). Formulier → portier → NAS → mail naar info@. */
+.stappen{counter-reset:stap;list-style:none;padding:0}
+.stappen li{counter-increment:stap;position:relative;padding-left:40px;margin:12px 0}
+.stappen li::before{content:counter(stap);position:absolute;left:0;top:2px;width:26px;height:26px;border-radius:50%;
+  background:var(--geel);color:#000;font-weight:600;font-size:14px;line-height:26px;text-align:center}
+form{margin-top:16px;display:flex;flex-direction:column;gap:20px}
+.veld{display:flex;flex-direction:column;gap:6px}
+label,.legenda{color:var(--ink);font-weight:500}
+.hulp{font-size:14px;color:var(--dof)}
+input[type=text],input[type=email],textarea{font:inherit;font-weight:400;color:var(--ink);background:#111;border:1px solid rgba(255,255,255,.28);
+  border-radius:12px;padding:12px 14px;min-height:48px;width:100%}
+textarea{min-height:140px;resize:vertical;line-height:1.5}
+input:focus-visible,textarea:focus-visible,button:focus-visible,.vink input:focus-visible{outline:2px solid var(--geel);outline-offset:2px}
+fieldset{border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.vink{display:flex;align-items:flex-start;gap:12px;color:var(--ink);font-weight:400;min-height:44px;cursor:pointer}
+.vink input{width:22px;height:22px;margin:2px 0 0;accent-color:var(--geel);flex:none}
+.vink span{color:var(--dof)} .vink strong{font-weight:500}
+.weg,form[hidden]{display:none!important}
+button{font:600 17px var(--sans);color:#000;background:var(--geel);border:0;border-radius:999px;min-height:52px;padding:0 28px;cursor:pointer;align-self:flex-start}
+button[disabled]{opacity:.55;cursor:default}
+.melding{border-radius:14px;padding:16px 18px;display:none}
+.melding.aan,.melding:target{display:block}
+.melding.goed{background:rgba(255,253,19,.10);border:1px solid rgba(255,253,19,.45)}
+.melding.goed p{color:var(--ink)}
+.melding.fout{background:rgba(255,80,80,.10);border:1px solid rgba(255,90,90,.55)}
+.melding.fout p{color:#ffd2d2}
+.klein{font-size:14px}
+@media (prefers-reduced-motion:no-preference){button{transition:transform .1s}button:active{transform:scale(.98)}}
+</style>
+</head>
+<body>
+<main>
+<a class="logo" href="/">Novera</a>
+
+<h1>Test Novera Route</h1>
+<p>Een route-app voor <strong>iPhone, Apple Watch en CarPlay</strong> die file probeert te vermijden. Zelf gebouwd, <strong>zonder Google en zonder reclame</strong>. Ik zoek mensen die hem willen testen.</p>
+
+<h2>Wat de app doet</h2>
+<ul>
+<li>Vergelijkt tot <strong>3 routes</strong> met live verkeer van Rijkswaterstaat.</li>
+<li>Rekent uit hoe groot de <strong>kans op file</strong> is, nog voor je vertrekt.</li>
+<li>Waarschuwt voor <strong>flitspalen en trajectcontroles</strong>.</li>
+<li>Werkt in <strong>CarPlay</strong> en op je <strong>Apple Watch</strong>.</li>
+<li>Novera, een <strong>eigen AI</strong>, denkt mee over de beste route.</li>
+</ul>
+
+<h2>Wat je nodig hebt</h2>
+<ul>
+<li>Een iPhone met <strong>iOS 18</strong> of nieuwer.</li>
+<li>Je rijdt in <strong>Nederland</strong>.</li>
+<li>De gratis app <strong>TestFlight</strong> van Apple.</li>
+<li>Je bent <strong>16 jaar</strong> of ouder.</li>
+</ul>
+
+<h2>Zo werkt het</h2>
+<ol class="stappen">
+<li>Je meldt je hieronder aan.</li>
+<li>Je krijgt een mail van mij met een link.</li>
+<li>Je installeert de app via TestFlight en gaat rijden. Wat je opvalt, stuur je via TestFlight.</li>
+</ol>
+<p>Voor nu is er plek voor <strong>100 testers</strong>.</p>
+
+<h2 id="aanmelden">Aanmelden</h2>
+
+<div id="bedankt" class="melding goed" role="status" tabindex="-1">
+<p><strong>Dank je wel!</strong> Je aanmelding is binnen. Je hoort van me via de mail.</p>
+</div>
+<div id="fout" class="melding fout" role="alert" tabindex="-1">
+<p id="fouttekst">Er ging iets mis met je aanmelding. Kijk je gegevens na en probeer het nog eens, of mail naar <span class="mail">info@novera-ai.nl</span>.</p>
+</div>
+
+<form id="formulier" action="https://route.novera-ai.nl/open/api/aanmelden" method="post" novalidate>
+  <div class="veld">
+    <label for="naam">Naam</label>
+    <input id="naam" name="naam" type="text" autocomplete="name" maxlength="80" required>
+  </div>
+  <div class="veld">
+    <label for="email">E-mailadres</label>
+    <input id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required>
+    <span class="hulp">Hierop krijg je de link om mee te doen.</span>
+  </div>
+  <div class="veld">
+    <label for="iphone">Welke iPhone heb je? <span class="hulp">(mag leeg)</span></label>
+    <input id="iphone" name="iphone" type="text" maxlength="60" placeholder="bijvoorbeeld iPhone 15">
+  </div>
+  <fieldset>
+    <span class="legenda">Wat gebruik je ook? <span class="hulp">(mag leeg)</span></span>
+    <label class="vink"><input type="checkbox" name="watch" value="ja"><span><strong>Apple Watch</strong></span></label>
+    <label class="vink"><input type="checkbox" name="carplay" value="ja"><span><strong>CarPlay</strong> in de auto</span></label>
+  </fieldset>
+  <div class="veld">
+    <label for="regio">Waar rijd je vooral? <span class="hulp">(mag leeg)</span></label>
+    <input id="regio" name="regio" type="text" maxlength="120" placeholder="bijvoorbeeld A4 Den Haag–Amsterdam">
+  </div>
+  <div class="veld">
+    <label for="waarom">Waarom lijkt het je leuk om mee te doen?</label>
+    <textarea id="waarom" name="waarom" maxlength="2000" required></textarea>
+  </div>
+  <div class="weg" hidden aria-hidden="true">
+    <label for="hp_q7">Laat dit veld leeg</label>
+    <input id="hp_q7" name="hp_q7" type="text" tabindex="-1" autocomplete="off">
+  </div>
+  <input type="hidden" name="duur" id="duur" value="">
+  <label class="vink"><input type="checkbox" name="toestemming" value="ja" required>
+    <span>Ik ben 16 jaar of ouder en vind het goed dat mijn gegevens worden gebruikt om contact met me op te nemen over de test. <a href="#privacy">Wat gebeurt er met mijn gegevens?</a></span></label>
+  <button type="submit" id="knop">Aanmelden</button>
+</form>
+
+<h2 id="privacy">Wat er met je gegevens gebeurt</h2>
+<ul>
+<li>Je naam en e-mailadres gebruik ik <strong>alleen</strong> om je uit te nodigen voor de test en om contact met je te houden.</li>
+<li>Je aanmelding staat op mijn eigen server in Nederland (met een reservekopie thuis) en in mijn mailbox bij iCloud Mail van Apple. Apple kan die mail ook buiten de EU bewaren.</li>
+<li>Ik <strong>deel en verkoop niets</strong>. Er zitten geen volgsoftware of reclame op deze pagina.</li>
+<li>Na de test verwijder ik je gegevens, ook uit de reservekopie. Wil je dat eerder? Mail naar <span class="mail">info@novera-ai.nl</span>.</li>
+</ul>
+<p class="klein">Lees ook de <a href="../route/privacy/">privacyverklaring van de app</a>.</p>
+
+<hr>
+<p class="klein">Gemaakt door Cley van der Vliet · <span class="mail">info@novera-ai.nl</span></p>
+</main>
+
+<script>
+(function () {
+  var form = document.getElementById("formulier");
+  var knop = document.getElementById("knop");
+  var bedankt = document.getElementById("bedankt");
+  var fout = document.getElementById("fout");
+  var fouttekst = document.getElementById("fouttekst");
+  var standaardFout = fouttekst.innerHTML;
+  var start = Date.now();
+
+  function toon(el, tekst) {
+    bedankt.classList.remove("aan"); fout.classList.remove("aan");
+    if (el === fout) { fouttekst.textContent = tekst || ""; if (!tekst) fouttekst.innerHTML = standaardFout; }
+    el.classList.add("aan");
+    el.focus({ preventScroll: true });
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function controleer() {
+    if (!form.naam.value.trim()) return "Vul je naam in.";
+    if (!form.email.value.trim() || !form.email.checkValidity()) return "Dit e-mailadres klopt niet. Kijk het nog even na.";
+    if (form.waarom.value.trim().length < 10) return "Vertel in een paar woorden waarom je mee wilt doen.";
+    if (!form.toestemming.checked) return "Zet het vinkje bij toestemming, anders mag ik je niet mailen.";
+    return "";
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var probleem = controleer();
+    if (probleem) { toon(fout, probleem); return; }
+    knop.disabled = true; knop.textContent = "Even geduld…";
+    document.getElementById("duur").value = String(Date.now() - start);
+    fetch(form.action, {
+      method: "POST",
+      headers: { "Accept": "application/json" },
+      body: new URLSearchParams(new FormData(form))
+    }).then(function (r) {
+      return r.json().catch(function () { return { ok: false }; }).then(function (d) { return { status: r.status, d: d }; });
+    }).then(function (x) {
+      if (x.d && x.d.ok) {
+        form.hidden = true;
+        toon(bedankt);
+        return;
+      }
+      toon(fout, (x.d && x.d.fout) || (x.status === 429 ? "Even rustig aan: probeer het over een paar minuten nog eens." : ""));
+      knop.disabled = false; knop.textContent = "Aanmelden";
+    }).catch(function () {
+      toon(fout, "");
+      knop.disabled = false; knop.textContent = "Aanmelden";
+    });
+  });
+
+  // Zonder JavaScript stuurt de server je terug naar #bedankt of #fout; dan het formulier bij bedankt verbergen.
+  if (location.hash === "#bedankt") form.hidden = true;
+})();
+</script>
+</body>
+</html>
