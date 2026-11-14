@@ -722,6 +722,7 @@ window.addEventListener("hashchange", () => tab(location.hash.slice(1)));
 
 /* het weefsel (weefsel.js): alleen nog op de live-pagina, met haar gedachte */
 const WV = { live: new Weefsel($("weefselDoek")) };
+let weefselGeladen = null; /* 14 nov 2026: stond als WV.geladen in WV, en dan liep elke for-in over WV vast op .stop/.laad */
 WV.live.opAntwoord = s => { $("weefselAntwoord").innerHTML = s.replace(/</g, "&lt;") + "<i></i>"; };
 function weefselLaad(w) {
   for (const k in WV) WV[k].laad(w);
@@ -788,7 +789,7 @@ function toon(d) {
   items.sort((a, b) => (a.t < b.t ? 1 : a.t > b.t ? -1 : 0));
   const tl = $("tijdlijnLijst"); tl.innerHTML = "";
   items.forEach(i => tl.insertAdjacentHTML("beforeend", `<div class="moment ${i.klas}"><time>${i.t}</time>${i.html}</div>`));
-  if (d.weefsel && d.weefsel !== WV.geladen) { WV.geladen = d.weefsel; weefselLaad(d.weefsel); weefselToon(document.querySelector(".pagina.aan").id); }
+  if (d.weefsel && d.weefsel !== weefselGeladen) { weefselGeladen = d.weefsel; weefselLaad(d.weefsel); weefselToon(document.querySelector(".pagina.aan").id); }
 }
 
 $("contactForm").addEventListener("submit", e => {
