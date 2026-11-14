@@ -26,24 +26,28 @@ body.menu-open{overflow:hidden}
 a{color:inherit;text-decoration:none}
 :focus-visible{outline:1px solid var(--geel);outline-offset:4px}
 
-/* kop: logo links, menu rechts */
-.kop{position:fixed;inset:0 0 auto 0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:22px 22px;mix-blend-mode:difference}
-.logo{font:600 14px var(--breed);letter-spacing:.22em;text-transform:uppercase}
-.knop{background:none;border:0;color:#fff;cursor:pointer;padding:10px;margin:-10px;width:52px;height:44px;position:relative}
-.knop i{position:absolute;left:10px;right:10px;height:1.5px;background:#fff;transition:transform .35s,opacity .25s,top .35s}
-.knop i:nth-child(1){top:16px}.knop i:nth-child(2){top:26px}
-body.menu-open .knop i:nth-child(1){top:21px;transform:rotate(45deg)}
-body.menu-open .knop i:nth-child(2){top:21px;transform:rotate(-45deg)}
+/* kop: logo links, menu rechts. Maten van de Kern: zelfde kolom als de inhoud (.kern-wrap) */
+.kop{position:fixed;inset:0 0 auto 0;z-index:20;height:var(--kern-kop-h);color:var(--kern-ink);mix-blend-mode:difference}
+body.kern-op-novera .kop{position:absolute}   /* op Novera scrolt de kop mee, zoals in de Kern */
+body.menu-open .kop{position:fixed}
+.kern-kop-in{height:100%;display:flex;align-items:center;justify-content:space-between}
+.logo{font:600 14px/1 var(--breed);letter-spacing:.22em;text-transform:uppercase;padding:8px 0}
+.knop{position:relative;width:44px;height:44px;margin-right:-11px;padding:0;border:0;background:none;color:inherit;cursor:pointer;border-radius:10px}
+.knop i{position:absolute;left:11px;width:22px;height:1.5px;background:currentColor;border-radius:1px;transition:transform .3s var(--kern-ease),top .3s var(--kern-ease)}
+.knop i:nth-child(1){top:18px}.knop i:nth-child(2){top:25px}
+body.menu-open .knop i:nth-child(1){top:21.25px;transform:rotate(45deg)}
+body.menu-open .knop i:nth-child(2){top:21.25px;transform:rotate(-45deg)}
 
-/* het menu: hele scherm, zwart, midden */
-.menu{position:fixed;inset:0;z-index:15;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s}
+/* het menu: hele scherm, zwart; links in de kolom van de inhoud, taal als schakelaar (zoals de Kern) */
+.menu{position:fixed;inset:0;z-index:15;background:var(--zwart);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s}
 body.menu-open .menu{opacity:1;visibility:visible}
-.menu a{font:300 clamp(17px,2.6vw,24px) var(--breed);letter-spacing:.28em;text-transform:uppercase;padding:4px 10px;opacity:.9;transform:translateY(10px);transition:transform .5s,opacity .5s}
-body.menu-open .menu a{transform:none}
-.menu a.aan{color:var(--geel)}
-.menu .taal{position:absolute;bottom:34px;display:flex;gap:26px}
-.menu .taal button{background:none;border:0;color:var(--dof);font:400 12px var(--breed);letter-spacing:.3em;cursor:pointer;padding:6px}
-.menu .taal button.aan{color:#fff;border-bottom:1px solid var(--geel)}
+.kern-menu-in{height:100%;display:flex;flex-direction:column;justify-content:space-between;padding-top:calc(var(--kern-kop-h) + 24px);padding-bottom:max(32px,env(safe-area-inset-bottom))}
+.kern-menu-links{margin:0;padding:0;list-style:none}
+.kern-menu-links a{display:block;padding:6px 0;font:600 32px/1.2 var(--kern-sans);letter-spacing:-.028em;color:var(--kern-ink2);transition:color .15s}
+.kern-menu-links a:hover,.kern-menu-links a.aan{color:var(--kern-ink)}
+.taal{display:inline-flex;align-self:flex-start;padding:3px;border:1px solid var(--kern-rand2);border-radius:999px}
+.taal button{height:32px;min-width:52px;padding:0 14px;border:0;border-radius:999px;background:none;color:var(--kern-ink2);font:500 13px/1 var(--kern-sans);letter-spacing:.02em;cursor:pointer}
+.taal button.aan{background:var(--kern-ink);color:#000}
 
 /* pagina's */
 .pagina{display:none}
@@ -155,107 +159,292 @@ a.examen .pijl{margin-top:10px;font:400 10px var(--breed);letter-spacing:.25em;t
 .machine .n{color:var(--dof);font-size:13px}
 
 /* ecosysteem */
-.eco{list-style:none;padding:0;margin:18px 0 8px;border-top:1px solid var(--lijn)}
-.eco li{display:grid;grid-template-columns:150px 1fr;gap:6px 20px;padding:16px 0;border-bottom:1px solid var(--lijn)}
-.eco b{font:300 19px var(--sier);display:block}
-.eco .st{display:block;margin-top:4px;font:400 10px var(--breed);letter-spacing:.22em;text-transform:uppercase;color:var(--dof);padding-top:6px}
-.eco .st.live{color:var(--geel)}
-.eco p{margin:0}
-ol.stappen{list-style:none;counter-reset:s;padding:0;margin:18px 0 8px;border-top:1px solid var(--lijn)}
-ol.stappen li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:6px 16px;padding:16px 0;border-bottom:1px solid var(--lijn)}
-ol.stappen li::before{content:counter(s);font:200 30px var(--sier);line-height:1;color:var(--dof)}
-ol.stappen li.klaar::before,ol.stappen li.nu::before{color:var(--geel)}
-ol.stappen .st{display:block;font:400 10px var(--breed);letter-spacing:.22em;text-transform:uppercase;color:var(--dof);margin-top:6px}
-@media (max-width:600px){.eco li{grid-template-columns:1fr}}
 footer{max-width:1100px;margin:0 auto;padding:40px 22px 60px;color:var(--dof2);font-size:12px;border-top:1px solid var(--lijn);display:flex;flex-wrap:wrap;gap:8px 24px}
 footer a{color:var(--dof)}
 @media (max-width:600px){.balk{grid-template-columns:88px 1fr 42px}ul.dagboek li,.moment{grid-template-columns:1fr}.held{min-height:100svh}}
+
+/* ===== Kern: het eerste scherm (kern + drie tegels). Alles heet kern-…, zodat niets botst met de rest van de site ===== */
+:root{
+  --kern-ink:#fafafa;
+  --kern-ink2:#a1a1aa;          /* 7.6:1 op zwart */
+  --kern-vlak:#0a0a0a;          /* tegel */
+  --kern-vlak2:#0f0f11;         /* kern-tegel, iets hoger */
+  --kern-rand:rgba(255,255,255,.10);
+  --kern-rand2:rgba(255,255,255,.14);
+  --kern-licht:inset 0 1px 0 rgba(255,255,255,.05);   /* haarfijne bovenrand-glans */
+  --kern-draad:rgba(255,255,255,.24);
+  --kern-geel:#fffd13;
+  --kern-sans:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --kern-ease:cubic-bezier(.2,.7,.2,1);
+  --kern-goot:20px;
+  --kern-kop-h:64px;            /* hoogte van de site-kop; kop, menu en held gebruiken deze maten */
+}
+.kern-held{font:400 16px/1.5 var(--kern-sans);color:var(--kern-ink);-moz-osx-font-smoothing:grayscale;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+:where(.kern-held) *,:where(.kern-held) *::before,:where(.kern-held) *::after{box-sizing:border-box}
+:where(.kern-held) :where(h1,h2,p){margin:0}
+:where(.kern-held) :focus-visible{outline:2px solid var(--kern-ink);outline-offset:3px;border-radius:6px}
+
+.kern-wrap{width:100%;max-width:1240px;margin-inline:auto;padding-inline:max(var(--kern-goot),env(safe-area-inset-left))}
+
+/* held */
+.kern-held{min-height:100vh;min-height:100svh;padding-top:calc(var(--kern-kop-h) + 24px);padding-bottom:32px}
+.kern-kop1{font:600 38px/1.05 var(--kern-sans);letter-spacing:-.036em}
+.kern-sub{margin-top:16px;max-width:34em;font-size:16px;line-height:1.45;color:var(--kern-ink2);text-wrap:pretty}
+.kern-acties{margin-top:24px;display:flex}
+.kern-btn{display:inline-flex;align-items:center;height:44px;padding:0 20px;border-radius:999px;background:var(--kern-ink);color:#000;font:500 15px/1 var(--kern-sans);letter-spacing:-.006em;transition:background .15s}
+.kern-btn:hover{background:#d4d4d8}
+
+/* roadmap: twee kolommen, kern over de volle breedte */
+.kern-rm{
+  --kern-cg:12px;      /* kolomafstand */
+  --kern-rg:32px;      /* rijafstand = lengte van de draad */
+  margin-top:40px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  grid-template-rows:auto var(--kern-rg) auto var(--kern-rg) auto;
+  column-gap:var(--kern-cg);
+}
+.kern-t-route {grid-area:1/1}
+.kern-t-agenda{grid-area:1/2}
+.kern-l-route {grid-area:2/1}
+.kern-l-agenda{grid-area:2/2}
+.kern-kern    {grid-area:3/1/4/3}
+.kern-l-thuis {grid-area:4/2}
+.kern-t-thuis {grid-area:5/2}
+
+.kern-tegel{display:flex;align-items:center;gap:12px;min-width:0;padding:12px;background:var(--kern-vlak);border:1px solid var(--kern-rand);border-radius:22px;box-shadow:var(--kern-licht)}
+.kern-tekst{min-width:0}
+.kern-naam{font:600 17px/1.2 var(--kern-sans);letter-spacing:-.016em;color:var(--kern-ink)}
+.kern-status{margin-top:4px;display:flex;align-items:center;gap:6px;font:500 13px/1.3 var(--kern-sans);color:var(--kern-ink2);font-variant-numeric:tabular-nums;letter-spacing:-.004em;white-space:nowrap}
+.kern-status.kern-nu{color:var(--kern-ink)}
+.kern-punt{flex:none;width:6px;height:6px;border-radius:50%;background:var(--kern-geel);box-shadow:0 0 8px rgba(255,253,19,.5)}
+
+.kern-icoon{display:block;flex:none;width:44px;height:44px;border-radius:22.5%;box-shadow:0 0 0 1px rgba(255,255,255,.12);background:#000}
+.kern-icoon.kern-leeg{display:grid;place-items:center;background:#111113;color:rgba(255,255,255,.55);box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+.kern-icoon.kern-leeg svg{width:50%;height:50%;display:block}
+
+/* de kern */
+.kern-kern{position:relative;overflow:hidden;justify-content:center;gap:16px;padding:20px;background:var(--kern-vlak2);border-color:var(--kern-rand2);border-radius:26px}
+.kern-icoon-vak{position:relative;flex:none;display:block}
+.kern-icoon-vak::before{content:"";position:absolute;inset:-50%;border-radius:50%;background:radial-gradient(closest-side,rgba(64,140,255,.28),rgba(64,140,255,.09) 55%,rgba(64,140,255,0));pointer-events:none}
+.kern-kern .kern-icoon{position:relative;width:56px;height:56px}
+.kern-kern .kern-naam{font-size:20px;letter-spacing:-.022em}
+.kern-kern .kern-status{margin-top:4px;font-size:14px;font-weight:400;white-space:normal;text-wrap:balance}
+
+/* draden: 1px, op een hele pixel, met een poortje aan elk eind */
+.kern-lijn{justify-self:start;margin-left:50%;margin-left:round(down,50%,1px);width:1px;height:100%;background:var(--kern-draad);position:relative;z-index:1}
+.kern-lijn::before,.kern-lijn::after{content:"";position:absolute;left:-2px;width:5px;height:5px;border-radius:50%;background:#000;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)}
+.kern-lijn::before{top:-3px}
+.kern-lijn::after{bottom:-3px}
+
+/* desktop */
+@media (min-width:1000px){
+  :root{--kern-goot:48px;--kern-kop-h:72px}
+  .kern-wrap{max-width:1320px}
+  .kern-held{
+    display:grid;grid-template-columns:minmax(0,520px) minmax(0,600px);column-gap:48px;
+    justify-content:space-between;align-items:center;
+    padding-top:var(--kern-kop-h);padding-bottom:var(--kern-kop-h);
+  }
+  .kern-kop1{font-size:64px;line-height:1.02;letter-spacing:-.044em}
+  .kern-sub{margin-top:24px;font-size:20px;line-height:1.5}
+  .kern-acties{margin-top:40px}
+  .kern-btn{height:48px;padding:0 24px;font-size:16px}
+  .kern-rm{--kern-cg:24px;--kern-rg:56px;margin-top:0}
+  .kern-tegel{gap:20px;padding:24px;border-radius:24px}
+  .kern-icoon{width:64px;height:64px}
+  .kern-naam{font-size:20px}
+  .kern-status{margin-top:6px;font-size:15px}
+  .kern-kern{gap:28px;padding:32px;border-radius:28px}
+  .kern-kern .kern-icoon{width:96px;height:96px}
+  .kern-kern .kern-naam{font-size:28px;letter-spacing:-.028em}
+  .kern-kern .kern-status{margin-top:6px;font-size:17px}
+}
+/* kleiner bureaublad: zelfde opzet, iets compacter */
+@media (min-width:1000px) and (max-width:1279px){
+  .kern-held{grid-template-columns:minmax(0,400px) minmax(0,500px)}
+  .kern-kop1{font-size:50px}
+  .kern-sub{font-size:18px}
+  .kern-rm{--kern-rg:48px}
+  .kern-tegel{gap:16px;padding:20px;border-radius:22px}
+  .kern-icoon{width:56px;height:56px}
+  .kern-naam{font-size:18px}
+  .kern-status{font-size:14px}
+  .kern-kern{gap:24px;padding:28px;border-radius:26px}
+  .kern-kern .kern-icoon{width:80px;height:80px}
+  .kern-kern .kern-naam{font-size:24px}
+  .kern-kern .kern-status{font-size:16px}
+}
+/* tablet: tekst boven, kaart eronder, samen verticaal in het midden */
+@media (min-width:640px) and (max-width:999px){
+  :root{--kern-goot:40px}
+  .kern-wrap{max-width:800px}
+  .kern-held{
+    display:flex;flex-direction:column;justify-content:center;
+    padding-top:calc(var(--kern-kop-h) + 24px);padding-bottom:calc(var(--kern-kop-h) + 8px);
+  }
+  .kern-kop1{font-size:56px;line-height:1.03;letter-spacing:-.042em}
+  .kern-sub{margin-top:20px;font-size:19px}
+  .kern-acties{margin-top:32px}
+  .kern-btn{height:48px;padding:0 24px;font-size:16px}
+  .kern-rm{--kern-cg:16px;--kern-rg:48px;margin-top:64px}
+  .kern-tegel{gap:20px;padding:24px;border-radius:26px}
+  .kern-icoon{width:64px;height:64px}
+  .kern-naam{font-size:20px}
+  .kern-status{margin-top:6px;font-size:15px}
+  .kern-kern{gap:28px;padding:28px;border-radius:30px}
+  .kern-kern .kern-icoon{width:88px;height:88px}
+  .kern-kern .kern-naam{font-size:28px;letter-spacing:-.028em}
+  .kern-kern .kern-status{margin-top:6px;font-size:17px}
+}
+/* liggende tablet / laag scherm: compacter zodat alles op één scherm past */
+@media (min-width:640px) and (max-width:999px) and (max-height:820px){
+  .kern-held{padding-bottom:24px}
+  .kern-kop1{font-size:46px}
+  .kern-sub{margin-top:16px;font-size:18px}
+  .kern-acties{margin-top:24px}
+  .kern-rm{--kern-rg:40px;margin-top:40px}
+  .kern-tegel{gap:16px;padding:20px;border-radius:24px}
+  .kern-icoon{width:56px;height:56px}
+  .kern-naam{font-size:18px}
+  .kern-status{font-size:14px}
+  .kern-kern{gap:24px;padding:24px;border-radius:28px}
+  .kern-kern .kern-icoon{width:72px;height:72px}
+  .kern-kern .kern-naam{font-size:24px}
+  .kern-kern .kern-status{font-size:16px}
+}
+/* iPhone SE / 375 breed */
+@media (max-width:380px){
+  :root{--kern-goot:16px}
+  .kern-kop1{font-size:36px}
+  .kern-sub{font-size:15px}
+  .kern-tegel{gap:10px}
+  .kern-tegel .kern-icoon{width:40px;height:40px}
+  .kern-tegel{border-radius:21px}
+  .kern-kern .kern-icoon{width:52px;height:52px}
+  .kern-kern{gap:14px;padding:18px;border-radius:24px}
+}
+/* heel smal (320): tegels staand, zodat niets uit de tegel loopt */
+@media (max-width:359px){
+  .kern-kop1{font-size:30px}
+  .kern-rm{margin-top:32px}
+  .kern-tegel:not(.kern-kern){flex-direction:column;align-items:flex-start;gap:12px}
+  .kern-kern{padding:16px}
+  .kern-kern .kern-icoon{width:48px;height:48px}
+  .kern-kern .kern-status{font-size:13px}
+}
+
+/* binnenkomst: één keer, kort */
+.kern-js .kern-anim{opacity:0;transform:translateY(8px)}
+.kern-js .kern-lijn{clip-path:inset(-4px -4px calc(100% + 4px) -4px)}
+.kern-js.kern-in .kern-anim{opacity:1;transform:none;transition:opacity .5s var(--kern-ease) calc(var(--kern-i)*60ms),transform .5s var(--kern-ease) calc(var(--kern-i)*60ms)}
+.kern-js.kern-in .kern-lijn{clip-path:inset(-4px);transition:clip-path .4s var(--kern-ease) calc(var(--kern-i)*60ms + 140ms)}
+@media (prefers-reduced-motion:reduce){
+  .kern-js .kern-anim,.kern-js.kern-in .kern-anim{opacity:1;transform:none;transition:none}
+  .kern-js .kern-lijn,.kern-js.kern-in .kern-lijn{clip-path:none;transition:none}
+  .menu,.knop i{transition:none}
+}
 </style>
+<script>document.documentElement.classList.add("kern-js");</script>
 </head>
 <body class="nl">
 
 <header class="kop">
-  <a class="logo" href="#novera" data-tab="novera">Novera</a>
-  <button class="knop" id="menuKnop" type="button" aria-label="menu" aria-expanded="false"><i></i><i></i></button>
+  <div class="kern-wrap kern-kop-in">
+    <a class="logo" href="#novera" data-tab="novera">Novera</a>
+    <button class="knop" id="menuKnop" type="button" aria-label="menu" aria-expanded="false" aria-controls="menu"><i></i><i></i></button>
+  </div>
 </header>
 
 <nav class="menu" id="menu" aria-label="menu">
-  <a href="#novera" data-tab="novera">Novera</a>
-  <a href="#cijfers" data-tab="cijfers"><span class="nl">Cijfers</span><span class="en">Numbers</span></a>
-  <a href="#live" data-tab="live">Live</a>
-  <a href="#tijdlijn" data-tab="tijdlijn"><span class="nl">Tijdlijn</span><span class="en">Timeline</span></a>
-  <a href="/testen/"><span class="nl">Testen</span><span class="en">Test</span></a>
-  <a href="#contact" data-tab="contact">Contact</a>
-  <div class="taal"><button id="t-nl" class="aan" type="button">NL</button><button id="t-en" type="button">EN</button></div>
+  <div class="kern-wrap kern-menu-in">
+    <ul class="kern-menu-links">
+      <li><a href="#novera" data-tab="novera">Novera</a></li>
+      <li><a href="#cijfers" data-tab="cijfers"><span class="nl">Cijfers</span><span class="en">Numbers</span></a></li>
+      <li><a href="#live" data-tab="live">Live</a></li>
+      <li><a href="#tijdlijn" data-tab="tijdlijn"><span class="nl">Tijdlijn</span><span class="en">Timeline</span></a></li>
+      <li><a href="/testen/"><span class="nl">Testen</span><span class="en">Test</span></a></li>
+      <li><a href="#contact" data-tab="contact">Contact</a></li>
+    </ul>
+    <div class="taal" role="group" aria-label="Taal / Language"><button id="t-nl" class="aan" type="button" aria-pressed="true">NL</button><button id="t-en" type="button" aria-pressed="false">EN</button></div>
+  </div>
 </nav>
 
 <main>
 
 <!-- NOVERA -->
 <section class="pagina" id="novera">
-  <div class="held">
-    <canvas id="heldDoek"></canvas>
-    <div class="schaduw"></div>
-    <div class="woord">Novera</div>
-    <div class="onder"><span class="nl">een brein voor de apps · thuis · Novera XXXDCCII leert sinds 5 november, vanaf nul</span><span class="en">a brain for the apps · at home · Novera XXXDCCII has been learning since 5 November, from zero</span></div>
+  <div class="kern-wrap kern-held">
+
+    <section class="kern-intro">
+      <h1 class="kern-kop1 kern-anim" style="--kern-i:0">
+        <span class="nl">Eén brein.<br>Alles verbonden.</span>
+        <span class="en">One brain.<br>All connected.</span>
+      </h1>
+      <p class="kern-sub kern-anim" style="--kern-i:1">
+        <span class="nl">Novera AI verbindt Route, Agenda en Thuis.</span>
+        <span class="en">Novera AI connects Route, Agenda and Home.</span>
+      </p>
+      <div class="kern-acties kern-anim" style="--kern-i:2">
+        <a class="kern-btn" href="/testen/">
+          <span class="nl">Meld je aan als tester</span>
+          <span class="en">Sign up as a tester</span>
+        </a>
+      </div>
+    </section>
+
+    <div class="kern-rm" role="list" aria-label="Roadmap">
+
+      <div class="kern-tegel kern-t-route kern-anim" style="--kern-i:2" role="listitem">
+        <img class="kern-icoon" src="iconen/route-256.png" alt="" width="64" height="64">
+        <div class="kern-tekst">
+          <p class="kern-naam">Route</p>
+          <p class="kern-status kern-nu"><span class="kern-punt" aria-hidden="true"></span><span class="nl">Nu in bèta</span><span class="en">Now in beta</span></p>
+        </div>
+      </div>
+
+      <div class="kern-tegel kern-t-agenda kern-anim" style="--kern-i:3" role="listitem">
+        <img class="kern-icoon" src="iconen/agenda-256.png" alt="" width="64" height="64">
+        <div class="kern-tekst">
+          <p class="kern-naam">Agenda</p>
+          <p class="kern-status">Q3/Q4 2027</p>
+        </div>
+      </div>
+
+      <span class="kern-lijn kern-l-route" aria-hidden="true" style="--kern-i:4"></span>
+      <span class="kern-lijn kern-l-agenda" aria-hidden="true" style="--kern-i:4"></span>
+
+      <div class="kern-tegel kern-kern kern-anim" style="--kern-i:4" role="listitem">
+        <span class="kern-icoon-vak">
+          <img class="kern-icoon" src="iconen/novera-ai-256.png" alt="" width="96" height="96">
+        </span>
+        <div class="kern-tekst">
+          <p class="kern-naam">Novera AI</p>
+          <p class="kern-status"><span class="nl">Het brein achter elke app</span><span class="en">The brain behind every app</span></p>
+        </div>
+      </div>
+
+      <span class="kern-lijn kern-l-thuis" aria-hidden="true" style="--kern-i:6"></span>
+
+      <div class="kern-tegel kern-t-thuis kern-anim" style="--kern-i:6" role="listitem">
+        <span class="kern-icoon kern-leeg" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path vector-effect="non-scaling-stroke" d="M4 10.25 12 4l8 6.25"/>
+            <path vector-effect="non-scaling-stroke" d="M6 8.75V19.5h12V8.75"/>
+            <path vector-effect="non-scaling-stroke" d="M10 19.5v-5h4v5"/>
+          </svg>
+        </span>
+        <div class="kern-tekst">
+          <p class="kern-naam"><span class="nl">Thuis</span><span class="en">Home</span></p>
+          <p class="kern-status">2028</p>
+        </div>
+      </div>
+
+    </div>
   </div>
   <div class="blok smal tekst">
     <p class="groot nl">Novera is een taalmodel dat thuis wordt gebouwd, van nul. Sinds 5 november 2026 leert Novera XXXDCCII. Zij is het model dat leert voor de apps Route en Agenda. Ze heeft 125 miljoen parameters en leert op één RTX 3070 Ti. De levende cijfers op deze site komen van haar.</p>
     <p class="groot en">Novera is a language model built at home, from zero. Novera XXXDCCII has been learning since 5 November 2026. She is the model that learns for the Route and Agenda apps. She has 125 million parameters and learns on a single RTX 3070 Ti. The live numbers on this site come from her.</p>
-
-    <h3 class="nl">Wat we deden · begin november 2026</h3><h3 class="en">What we did · early November 2026</h3>
-    <p class="nl">Op 1 november begon Novera XXXII, vanaf nul. Ze had 267 miljoen parameters en leerde 19 vakken tegelijk, op twee Tesla P100's. Ze leerde wel, maar traag. Een stap duurde 3,2 seconden, en een proefwerk legde haar 1,6 tot 3,4 uur stil. Cley wilde geen brein meer dat alles tegelijk leert. Hij wilde een model alleen voor de apps. Op 5 november om 19.47 uur stopte XXXII, bij stap 124.900. Ze is bewaard, en er is niets van gewist.</p>
-    <p class="en">On 1 November Novera XXXII started, from zero. She had 267 million parameters and learned 19 subjects at once, on two Tesla P100s. She did learn, but slowly. One step took 3.2 seconds, and a test held her up for 1.6 to 3.4 hours. Cley no longer wanted a brain that learns everything at once. He wanted a model just for the apps. On 5 November at 19:47 XXXII stopped, at step 124,900. She has been kept, and nothing was deleted.</p>
-    <p class="nl">Dezelfde avond om 22.13 uur begon Novera XXXDCCII. Ook zij begon vanaf nul. Ze leert maar vier vakken: de agenda, de weg, gereedschap en lezen. Ze heeft 16 lagen en 125 miljoen parameters, ongeveer de helft van XXXII. Ze ziet 4.096 woorddelen (stukjes van woorden) tegelijk. De twee P100's gingen uit de EPYC, en er kwam één RTX 3070 Ti met 8 GB voor in de plaats. Cleys naam is uit al haar lesstof gehaald. Bij de agenda en de weg komt 1 op de 4 lessen uit echte data van de apps, die we eerst schoonmaken.</p>
-    <p class="en">The same evening at 22:13 Novera XXXDCCII started. She too began from zero. She learns only four subjects: the calendar, the road, tools and reading. She has 16 layers and 125 million parameters, about half as many as XXXII. She sees 4,096 word pieces (bits of words) at once. The two P100s came out of the EPYC, and a single RTX 3070 Ti with 8 GB took their place. Cley's name was removed from all her learning material. For the calendar and the road, 1 in 4 lessons comes from real data from the apps, which we clean first.</p>
-    <p class="nl">Op 6 en 7 november maakten we haar sneller. De kaart krijgt nu meer werk per opdracht, dus hij wacht minder. Haar geheugen zocht bij elke nieuwe herinnering steeds vanaf het begin van de lijst. Dat hebben we gerepareerd, en daarna kostte een stap 38 procent minder tijd. Ook kreeg haar geheugen ruimte voor 50 miljoen herinneringen, in plaats van 2,4 miljoen. Ze herhaalt nu in lagen, een idee van Cley: de helft uit de laatste 100.000 stappen, 30 procent van verder terug tot een miljoen stappen, en 20 procent nog ouder. We vonden ook een fout in de verbinding tussen de apps en Novera. Elk antwoord in de goede vorm kreeg 90 procent zekerheid, ook als het fout was. Nu is een antwoord pas zeker als haar uitwerking stap voor stap klopt. Anders toont de app het niet.</p>
-    <p class="en">On 6 and 7 November we made her faster. The card now gets more work per instruction, so it waits less. For every new memory, her memory store searched from the start of the list. That was fixed, and after that a step took 38 percent less time. Her memory also got room for 50 million memories, instead of 2.4 million. She now replays in layers, an idea of Cley's: half from the last 100,000 steps, 30 percent from further back up to a million steps, and 20 percent older still. We also found a mistake in the link between the apps and Novera. Every answer in the right form got 90 percent certainty, even when it was wrong. Now an answer only counts as certain if her working checks out step by step. Otherwise the app does not show it.</p>
-    <p class="nl">Op 7 en 8 november groeide Novera Route tot versie 1.4.23. Route waarschuwt nu voor flitspalen, trajectcontroles en roodlichtcamera's. Dat werkt ook zonder geplande route en in CarPlay. Een flitspaal telt alleen als hij binnen 15 meter van je weg staat. Tijdens een trajectcontrole zie je je gemiddelde snelheid, ook in CarPlay. De flitspalen komen uit OpenStreetMap. Niet alle flitspalen en trajectcontroles staan erin. Je kunt je ritten delen, maar alleen als je dat zelf aanzet. Bij het routeadvies van Novera staat nu dat zij een AI is en fouten kan maken. En het zoekpaneel kun je omlaag vegen, tot alleen het zoekveld over is.</p>
-    <p class="en">On 7 and 8 November Novera Route moved up to version 1.4.23. Route now warns about speed cameras, average-speed checks and red-light cameras. This also works without a planned route and in CarPlay. A speed camera only counts if it is within 15 metres of your road. During an average-speed check you see your average speed, in CarPlay too. The speed cameras come from OpenStreetMap. Not every speed camera and average-speed check is included. You can share your drives, but only if you switch that on yourself. Novera's route advice now says that she is an AI and can make mistakes. And you can swipe the search panel down, until only the search field is left.</p>
-    <p class="nl">Novera Route Beta is de versie voor andere mensen. Op 8 november ging Beta 1.0.7 naar Apple, met alles uit Route 1.4.23. Deelt iemand in Beta een rit, dan knipt de telefoon aan het begin en aan het eind minstens 500 meter van de rit af. Gedeeld worden alleen de routelijn en de snelheden, zonder naam of account. Apple moet deze testversie eerst goedkeuren.</p>
-    <p class="en">Novera Route Beta is the version for other people. On 8 November Beta 1.0.7 went to Apple, with everything from Route 1.4.23. If someone shares a drive in Beta, the phone cuts at least 500 metres off the start and the end of the drive. Only the route line and the speeds are shared, without a name or an account. Apple has to approve this test version first.</p>
-    <p class="nl">Ook op 8 november verhuisde de NAS, onze thuisserver, van een HP DL360 naar een HP DL380 met twee processors. De NAS verzamelt de verkeersdata en berekent voor de apps de kans op file. Om 15.25 uur draaide alles weer. Dezelfde dag vonden we een storing. Tussen 11.18 en 14.42 uur mislukten de verkeersmetingen, omdat de database op slot zat. Dat is gerepareerd.</p>
-    <p class="en">Also on 8 November the NAS, our home server, moved from an HP DL360 to an HP DL380 with two processors. The NAS collects the traffic data and works out the chance of traffic jams for the apps. By 15:25 everything was running again. The same day we found a fault. Between 11:18 and 14:42 the traffic measurements failed, because the database was locked. That has been fixed.</p>
-
-    <h3 class="nl">Waar we nu mee bezig zijn</h3><h3 class="en">What we are working on now</h3>
-    <p class="nl">Op 8 november om 18.56 uur stond Novera XXXDCCII op stap 148.500 van 1.000.000. Dat is 15 procent. Een stap duurt gemiddeld ruim 2 seconden. De val zakte van 10,54 bij de start naar 3,69 bij stap 148.000. De val laat zien hoe verrast ze is door opgaven en tekst die ze nooit oefent. Lager is beter. Bij de agenda, de weg en gereedschap is haar val bijna nul, en daar zit ze al op de hoogste trede, het moeilijkste niveau van dat vak. Bij lezen is hij 4,13, en daar staat ze op trede 8 van 43. Lezen is dus haar moeilijkste vak.</p>
-    <p class="en">On 8 November at 18:56 Novera XXXDCCII was at step 148,500 of 1,000,000. That is 15 percent. A step takes a little over 2 seconds on average. The validation loss fell from 10.54 at the start to 3.69 at step 148,000. That loss shows how surprised she is by tasks and text she never trains on. Lower is better. For the calendar, the road and tools her loss is almost zero, and there she is already on the highest level, the hardest level of that subject. For reading it is 4.13, and there she is on level 8 of 43. So reading is her hardest subject.</p>
-    <p class="nl">Elke 25.000 stappen maakt ze een proefwerk. Dat van stap 125.000 was op 8 november en duurde ruim 5 minuten. Bij XXXII duurde een proefwerk uren. Op de agenda en de weg scoorde ze boven de 90 procent, en op gereedschap 78 procent. Van de 55 nieuwe opgaven die ze nooit had geoefend, had ze er 52 goed. Bij lezen meten we bits per teken, en ook daar is lager beter. Dat getal zakte van 1,943 bij stap 25.000 naar 1,787 bij stap 125.000.</p>
-    <p class="en">Every 25,000 steps she takes a test. The one at step 125,000 was on 8 November and took a little over 5 minutes. With XXXII a test took hours. On the calendar and the road she scored above 90 percent, and on tools 78 percent. Of the 55 new tasks she had never practised, she got 52 right. For reading we measure bits per character, and there too lower is better. That number fell from 1.943 at step 25,000 to 1.787 at step 125,000.</p>
-    <p class="nl">Let op: het proefwerk toetst niet precies de routevragen van de app. Op nieuwe routes zoals in de app had ze op 7 november 61 tot 64 procent goed. Daarom toont Route haar advies alleen als haar uitwerking stap voor stap klopt. Anders beslist de app zelf.</p>
-    <p class="en">Note: the test does not check exactly the route questions from the app. On new routes like the ones in the app she got 61 to 64 percent right on 7 November. That is why Route only shows her advice when her working checks out step by step. Otherwise the app decides by itself.</p>
-    <p class="nl">Route Beta zoekt testers. Er is plek voor 100 testers, via TestFlight, de testapp van Apple. Je hebt een iPhone met iOS 18 of nieuwer nodig, je rijdt in Nederland en je bent 16 jaar of ouder. Aanmelden kan op <a href="/testen/" style="border-bottom:1px solid var(--geel)">novera-ai.nl/testen</a>. Cley nodigt mensen zelf uit zodra Apple versie 1.0.7 heeft goedgekeurd.</p>
-    <p class="en">Route Beta is looking for testers. There is room for 100 testers, through TestFlight, Apple's test app. You need an iPhone with iOS 18 or newer, you drive in the Netherlands and you are 16 or older. You can sign up at <a href="/testen/" style="border-bottom:1px solid var(--geel)">novera-ai.nl/testen</a>. Cley invites people himself, once Apple has approved version 1.0.7.</p>
-
-    <h3 class="nl">Wat we gaan doen</h3><h3 class="en">What comes next</h3>
-    <p class="nl">Novera XXXDCCII leert door tot 1.000.000 stappen. Het volgende proefwerk is bij stap 150.000. Ze stopt niet vanzelf als een proefwerk geen nieuw record geeft, maar de noodrem blijft wel aan: die zet haar stil als er echt iets misgaat. Lezen groeit nog door, tot trede 43 en teksten van 2.048 woorddelen. Rond stap 940.000 zit haar geheugen vol. Vóór stap 900.000 bouwen we daarom een manier waarop haar geheugen oude herinneringen kan loslaten als het vol is. Er staat ook een nieuwe regel klaar. Daarmee leert ze alleen van ritten die echt zijn afgemaakt. Die regel gaat pas in na een pauze en een ja van Cley.</p>
-    <p class="en">Novera XXXDCCII keeps learning up to 1,000,000 steps. The next test is at step 150,000. She does not stop just because a test sets no new record, but the emergency brake stays on: it halts her if something really goes wrong. Reading keeps growing, up to level 43 and texts of 2,048 word pieces. Around step 940,000 her memory will be full. So before step 900,000 we will build a way for her memory to let go of old memories once it is full. A new rule is also ready. With it she only learns from drives that were really finished. That rule only takes effect after a pause and a yes from Cley.</p>
-    <p class="nl">In de nieuwe NAS zitten twee Tesla P100's van 16 GB. Novera gaat daar later de vragen van de apps beantwoorden. De EPYC doet dan alleen nog het leren. De software van de NAS ondersteunt de P100 niet meer. Daarom is het plan een virtuele machine met beide kaarten: een aparte computer binnen de NAS. Eerst beantwoordt ze de vragen één voor één, uit een wachtrij. Dit is een schatting en nog niet gemeten: op deze manier zou één P100 ongeveer 1.000 testers kunnen bedienen.</p>
-    <p class="en">The new NAS holds two 16 GB Tesla P100s. Later, Novera will answer the apps' questions there. The EPYC then only does the learning. The NAS software no longer supports the P100. That is why the plan is a virtual machine with both cards: a separate computer inside the NAS. At first she answers the questions one at a time, from a queue. This is a rough estimate, not yet measured: this way one P100 could serve about 1,000 testers.</p>
-    <p class="nl">Zodra Apple Beta 1.0.7 goedkeurt, nodigt Cley de eerste testers uit. Ook komt er Beta 1.0.8, die oude code opruimt. Eind november bekijken we samen de cijfers van de kans op file. Tot dan lopen de metingen door, zonder aanpassingen. Onze verkeersdata komt van de NDW, het Nationaal Dataportaal Wegverkeer. Vóór 9 februari 2027 moeten onze verkeersmetingen over op hun nieuwe dataformaat, DATEX v3.</p>
-    <p class="en">As soon as Apple approves Beta 1.0.7, Cley invites the first testers. There will also be Beta 1.0.8, which cleans up old code. At the end of November we will go through the traffic-jam figures together. Until then the measurements keep running, without changes. Our traffic data comes from NDW, the Dutch national road traffic data portal. Before 9 February 2027 our traffic measurements have to switch to its new data format, DATEX v3.</p>
-
-    <h3 class="nl">Het ecosysteem</h3><h3 class="en">The ecosystem</h3>
-    <p class="nl">Novera wordt meer dan een brein alleen. Om haar heen groeit een ecosysteem: een groep apps die samenwerken. Zij zit in het midden: de apps stellen haar vragen, en zij leert van hun echte data, die we eerst schoonmaken. De NAS, onze thuisserver, verbindt alles. Hij verzamelt de verkeersdata, berekent voor de apps de kans op file en geeft hun vragen aan Novera door. Alle apps lopen nu via TestFlight. In de App Store staat er nog geen.</p>
-    <p class="en">Novera is becoming more than a brain on its own. Around her an ecosystem is growing: a group of apps that work together. She sits in the middle: the apps ask her questions, and she learns from their real data, which we clean first. The NAS, our home server, connects everything. It collects the traffic data, works out the chance of traffic jams for the apps and passes their questions on to Novera. All apps run through TestFlight for now. None of them is in the App Store yet.</p>
-    <ul class="eco">
-      <li><div><b>Novera Route</b><span class="st live"><span class="nl">in gebruik bij Cley</span><span class="en">in use by Cley</span></span></div><div><p class="nl">Een navigatie-app voor de iPhone, de Apple Watch en CarPlay. In de auto werkt hij sinds 28 oktober. Hij vergelijkt tot 3 routes met live verkeer. Hij toont de kans op file per weg en per uur van de week, uit metingen die de NAS sinds 4 oktober bijhoudt. Sinds 7 november waarschuwt hij voor flitspalen en trajectcontroles. Novera denkt mee over de route, en de app toont haar advies naast zijn eigen advies. De app neemt haar advies nooit vanzelf over. Nieuwe functies proberen we eerst uit in een aparte proefapp, Route Klei. Nu op versie 1.4.23.</p><p class="en">A navigation app for the iPhone, the Apple Watch and CarPlay. It has worked in the car since 28 October. It compares up to 3 routes with live traffic. It shows the chance of traffic jams per road and per hour of the week, from measurements the NAS has kept since 4 October. Since 7 November it warns about speed cameras and average-speed checks. Novera helps choose a route, and the app shows her advice next to its own. The app never switches to her route by itself. New features are tried first in a separate test app, Route Klei. Now at version 1.4.23.</p></div></li>
-      <li><div><b>Novera Route Beta</b><span class="st live"><span class="nl">zoekt testers</span><span class="en">looking for testers</span></span></div><div><p class="nl">De versie van Route voor andere mensen, sinds 3 november. Zonder Google en zonder reclame. Versie 1.0.7 heeft alles uit Route 1.4.23 en wacht op de beoordeling van Apple. Ritten uit Beta gaan niet naar Novera's lessen. Ritten delen staat standaard uit. Er is plek voor 100 testers. Aanmelden kan op <a href="/testen/" style="border-bottom:1px solid var(--geel)">novera-ai.nl/testen</a>.</p><p class="en">The version of Route for other people, since 3 November. Without Google and without ads. Version 1.0.7 has everything from Route 1.4.23 and is waiting for Apple's review. Drives from Beta do not go into Novera's lessons. Sharing drives is off by default. There is room for 100 testers. You can sign up at <a href="/testen/" style="border-bottom:1px solid var(--geel)">novera-ai.nl/testen</a>.</p></div></li>
-      <li><div><b>Novera Agenda</b><span class="st live"><span class="nl">in gebruik bij Cley</span><span class="en">in use by Cley</span></span></div><div><p class="nl">Afspraken uit de agenda van je iPhone, met twee seintjes om op tijd te vertrekken: standaard 30 en 10 minuten vooraf, met de kans op file erbij. Ook herinneringen, boodschappen, een Apple Watch-app en widgets. Route toont boven het zoekveld de eerstvolgende afspraak met de vertrektijd. Een tik op het seintje opent de rit in Route. In het blok <q>haar dag</q> staat hoe het met Novera XXXDCCII gaat. De agenda is een van haar vier vakken.</p><p class="en">Appointments from your iPhone's calendar, with two nudges to leave on time: by default 30 and 10 minutes before, with the chance of traffic jams included. Also reminders, shopping, an Apple Watch app and widgets. Route shows the next appointment with its departure time above the search field. A tap on the nudge opens the drive in Route. The block <q>her day</q> shows how Novera XXXDCCII is doing. The calendar is one of her four subjects.</p></div></li>
-      <li><div><b>Novera AI</b><span class="st live"><span class="nl">in gebruik bij Cley</span><span class="en">in use by Cley</span></span></div><div><p class="nl">De app die laat zien hoe ze leert. Een live-tegel van Novera XXXDCCII met stap, val en vakken. Sinds 8 november toont de app ook hoe ze groeit in lezen. Het blok Stroom toont per kaart het verbruik en de temperatuur. Ook in widgets en via Siri. Haar herinneringen staan er alleen als aantal in, zonder inhoud.</p><p class="en">The app that shows how she learns. A live tile of Novera XXXDCCII with step, loss and subjects. Since 8 November it also shows her progress in reading. The Power block shows the draw and temperature of each card. In widgets and through Siri too. Her memories appear only as a count, without contents.</p></div></li>
-      <li><div><b>Novera Thuis</b><span class="st live"><span class="nl">tabblad in Novera AI</span><span class="en">a tab in Novera AI</span></span></div><div><p class="nl">Je kunt lampen aan- en uitzetten en dimmen, en timers zetten. Novera zelf bedient nog niets. Elk verzoek om thuis iets te doen wacht op een ja van Cley.</p><p class="en">You can switch lights on and off, dim them and set timers. Novera herself does not operate anything yet. Every request to do something at home waits for a yes from Cley.</p></div></li>
-    </ul>
-
-    <h3 class="nl">De stappen</h3><h3 class="en">The steps</h3>
-    <ol class="stappen">
-      <li class="klaar"><div><p class="nl">Een eigen brein dat stabiel leert. Novera IV kwam tot 305.000 stappen, MMMLXX tot 368.900 en XXXII tot 124.900. Wat zij ons leerden, zit vanaf stap 0 in XXXDCCII.</p><p class="en">A brain of our own that learns steadily. Novera IV reached 305,000 steps, MMMLXX 368,900 and XXXII 124,900. What they taught us is in XXXDCCII from step 0.</p><span class="st"><span class="nl">gedaan</span><span class="en">done</span></span></div></li>
-      <li class="nu"><div><p class="nl">Een brein alleen voor de apps. XXXDCCII leert vier vakken, zonder Cleys naam in de lesstof. Bij de agenda, de weg en gereedschap zit ze al op de hoogste trede.</p><p class="en">A brain just for the apps. XXXDCCII learns four subjects, without Cley's name in the learning material. In the calendar, the road and tools she is already on the highest level.</p><span class="st"><span class="nl">nu bezig</span><span class="en">in progress</span></span></div></li>
-      <li class="nu"><div><p class="nl">Lezen. Ruim 13 miljard woorddelen Nederlandse tekst, geschreven door mensen. Dit is haar moeilijkste vak.</p><p class="en">Reading. More than 13 billion word pieces of Dutch text, written by people. This is her hardest subject.</p><span class="st"><span class="nl">nu bezig</span><span class="en">in progress</span></span></div></li>
-      <li class="nu"><div><p class="nl">Novera denkt mee in de apps. In Route kiest ze een route en zegt ze ja of nee tegen een voorstel. De app toont haar advies alleen als haar uitwerking stap voor stap klopt.</p><p class="en">Novera thinks along in the apps. In Route she picks a route and says yes or no to a suggestion. The app only shows her advice when her working checks out step by step.</p><span class="st"><span class="nl">begonnen</span><span class="en">started</span></span></div></li>
-      <li class="nu"><div><p class="nl">Testers. Route Beta voor 100 testers, via TestFlight. Aanmelden kan al. De eerste uitnodigingen volgen zodra Apple de app heeft goedgekeurd.</p><p class="en">Testers. Route Beta for 100 testers, through TestFlight. You can sign up now. The first invitations follow once Apple has approved the app.</p><span class="st"><span class="nl">wacht op Apple</span><span class="en">waiting for Apple</span></span></div></li>
-      <li class=""><div><p class="nl">Novera op de NAS. Ze gaat de vragen van de apps beantwoorden vanaf de P100's in de NAS. De EPYC doet dan alleen nog het leren.</p><p class="en">Novera on the NAS. She will answer the apps' questions from the P100s in the NAS. The EPYC then only does the learning.</p><span class="st"><span class="nl">volgende</span><span class="en">next</span></span></div></li>
-      <li class=""><div><p class="nl">Een miljoen stappen. Dan is deze run klaar. Rond stap 940.000 raakt haar geheugen vol. Vóór stap 900.000 bouwen we daarom een manier om oude herinneringen los te laten.</p><p class="en">One million steps. Then this run is complete. Around step 940,000 her memory gets full. So before step 900,000 we will build a way to let go of old memories.</p><span class="st"><span class="nl">doel</span><span class="en">goal</span></span></div></li>
-    </ol>
 
     <h3 class="nl">Wat Novera is</h3><h3 class="en">What Novera is</h3>
     <p class="nl">Novera is geen kopie van een bestaand model. Het is ook geen fine-tune. Het brein is zelf gebouwd. De lesstof is zelf samengesteld. De opgaven, de metingen en het venster waarin je haar ziet denken zijn ook zelf gebouwd. Novera XXXDCCII leert op één RTX 3070 Ti, een videokaart met 8 GB geheugen. Er is geen cloud. Er is geen geld van buiten. Er is geen team. Er is één bouwer, een assistent en een kamer in Nederland.</p>
@@ -508,6 +697,7 @@ function taal(t) {
   document.body.classList.remove("nl", "en"); document.body.classList.add(t); document.documentElement.lang = t;
   try { localStorage.setItem("taal", t); } catch (e) {}
   $("t-nl").classList.toggle("aan", t === "nl"); $("t-en").classList.toggle("aan", t === "en");
+  $("t-nl").setAttribute("aria-pressed", t === "nl" ? "true" : "false"); $("t-en").setAttribute("aria-pressed", t === "en" ? "true" : "false");
   if (DATA) toon(DATA);
 }
 $("t-nl").addEventListener("click", () => taal("nl"));
@@ -523,14 +713,15 @@ function tab(naam) {
   if (!TABS.includes(naam)) naam = "novera";
   for (const t of TABS) $(t).classList.toggle("aan", t === naam);
   for (const a of document.querySelectorAll("[data-tab]")) a.classList.toggle("aan", a.dataset.tab === naam);
+  document.body.classList.toggle("kern-op-novera", naam === "novera");   /* Kern: op Novera scrolt de kop mee */
   menu(false); window.scrollTo({ top: 0 });
   if (naam === "live" && DATA) tekenVal(DATA.val_reeks);
   weefselToon(naam);
 }
 window.addEventListener("hashchange", () => tab(location.hash.slice(1)));
 
-/* het weefsel (weefsel.js): op de startpagina als beeld achter het woord, op de live-pagina met haar gedachte */
-const WV = { novera: new Weefsel($("heldDoek")), live: new Weefsel($("weefselDoek")) };
+/* het weefsel (weefsel.js): alleen nog op de live-pagina, met haar gedachte */
+const WV = { live: new Weefsel($("weefselDoek")) };
 WV.live.opAntwoord = s => { $("weefselAntwoord").innerHTML = s.replace(/</g, "&lt;") + "<i></i>"; };
 function weefselLaad(w) {
   for (const k in WV) WV[k].laad(w);
@@ -616,6 +807,22 @@ let DATA = null;
 })();
 function klaar(d) { DATA = d; toon(d); }
 fetch("data.json?t=" + Date.now()).then(r => r.json()).then(klaar).catch(() => { if (window.DATA_INLINE) klaar(window.DATA_INLINE); else $("vers").textContent = "…"; });
+</script>
+<script>
+/* Kern (eerste scherm): binnenkomst één keer, zodra de letter er is (of na 700 ms) */
+(function () {
+  "use strict";
+  var gestart = false;
+  function start() {
+    if (gestart) return;
+    gestart = true;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { document.documentElement.classList.add("kern-in"); });
+    });
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(start, start);
+  setTimeout(start, 700);
+})();
 </script>
 </body>
 </html>
